@@ -21,7 +21,8 @@ func _input(event):
     if hovering != null:
         if Input.is_action_just_pressed("LMB") and dragging == null:
             original_position = global_position
-        elif Input.is_action_just_released("LMB"):
+        elif Input.is_action_just_released("LMB") and dragging == null:
+            hovering.push_to_front()
             hovering.click()
         elif Input.is_action_just_pressed("RMB"):
             hovering.flip()
