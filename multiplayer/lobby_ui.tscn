@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf2e86lw05mot"]
+
+[ext_resource type="Script" path="res://multiplayer/lobby_ui.gd" id="1_djaal"]
+
+[node name="LobbyUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_djaal")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="host" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "HOST"
+
+[node name="join" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "JOIN
+"
+
+[node name="IP" type="TextEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+text = "localhost"
+placeholder_text = "IP"
+
+[node name="Port" type="TextEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+placeholder_text = "IP"
+
+[connection signal="pressed" from="HBoxContainer/host" to="." method="_on_host_pressed"]
+[connection signal="button_down" from="HBoxContainer/join" to="." method="_on_join_button_down"]
