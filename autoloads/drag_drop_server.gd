@@ -13,6 +13,7 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card: ", path)
         inst.texture = texture
+        inst.global_position = pos
         add_child(inst)
         return inst
 

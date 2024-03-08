@@ -15,17 +15,17 @@ func _click():
             draw_card()
             print("server draw card")
 
-@rpc("any_peer", "call_local", "reliable")
-func _return_draw_card(path: String):
-    # spawn the card and remove from pile    
-    DragDropServer.new_card.rpc(path, global_position)
-    card_paths.erase(path)
-
 func draw_card() -> String:
     var path = card_paths.pick_random()
     # after draw inform clients
     _return_draw_card.rpc(path)
     return path
+
+@rpc("authority", "call_remote", "reliable")
+func _return_draw_card(path: String):
+    # spawn the card and remove from pile    
+    DragDropServer.new_card.rpc(path, global_position)
+    card_paths.erase(path)
 
 func load_deck(res: DeckRes):
     texture = res.back_texture
