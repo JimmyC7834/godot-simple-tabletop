@@ -1,8 +1,32 @@
-[gd_scene load_steps=4 format=3 uid="uid://c475cacqkbqi"]
+[gd_scene load_steps=12 format=3 uid="uid://c475cacqkbqi"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/drag_drop_server_panel.gd" id="1_t1hwg"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://multiplayer/lobby_ui.tscn" id="1_v1mw5"]
 [ext_resource type="PackedScene" uid="uid://0is158vlvnit" path="res://ui/control_bar.tscn" id="2_8wfmf"]
+[ext_resource type="Script" path="res://hand.gd" id="4_bn8jo"]
+[ext_resource type="PackedScene" uid="uid://dy1eap07t04ma" path="res://panel item/play_card.tscn" id="5_1si5m"]
+[ext_resource type="Texture2D" uid="uid://drt4wxcr4seih" path="res://assets/ccs_w66_001.png" id="6_s6gkf"]
+
+[sub_resource type="Curve" id="Curve_yihh3"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 1.14138, 0, 0, Vector2(1, 1), 1.03041, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_w06ye"]
+_data = [Vector2(0.565892, 1), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_b0vfy"]
+_data = [Vector2(0, 0), 0.0, 3.65153, 0, 0, Vector2(0.5, 0.748387), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.29285, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_g3sj7"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_21mkc"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [node name="DragDropServerPanel" type="Node2D"]
 script = ExtResource("1_t1hwg")
@@ -23,3 +47,36 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="LobbyUI" parent="." instance=ExtResource("1_v1mw5")]
+
+[node name="Hand" type="Node2D" parent="."]
+script = ExtResource("4_bn8jo")
+spread_curve = SubResource("Curve_yihh3")
+scale_curve = SubResource("Curve_w06ye")
+y_curve = SubResource("Curve_b0vfy")
+rotation_curve = SubResource("Curve_g3sj7")
+tint_gradient = SubResource("Gradient_21mkc")
+spread = 50
+y_spread = 15
+card_rotation = 0.05
+tween_duration = 0.2
+
+[node name="Hand" type="Node2D" parent="Hand"]
+position = Vector2(576, 640)
+
+[node name="Card" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")
+
+[node name="Card2" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")
+
+[node name="Card3" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")
+
+[node name="Card4" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")
+
+[node name="Card5" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")
+
+[node name="Card6" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+texture = ExtResource("6_s6gkf")

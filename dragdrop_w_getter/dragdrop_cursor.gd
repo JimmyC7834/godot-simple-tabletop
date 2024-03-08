@@ -17,6 +17,15 @@ func _input(event):
         return
     
     hovering = choose_dragdrop_object()
+
+    if hovering != null:
+        if Input.is_action_just_pressed("LMB") and dragging == null:
+            original_position = global_position
+        elif Input.is_action_just_released("LMB") and dragging == null:
+            hovering.push_to_front()
+            hovering.click()
+        elif Input.is_action_just_pressed("RMB") and dragging == null:
+            hovering.flip()
     
     if dragging != null:
         if Input.is_action_just_pressed("ROTATE_LEFT"):
@@ -35,15 +44,6 @@ func _input(event):
             dragging.end_dragging()
             print(dragging.name, " dropped")
             dragging = null
-    
-    if hovering != null:
-        if Input.is_action_just_pressed("LMB") and dragging == null:
-            original_position = global_position
-        elif Input.is_action_just_released("LMB") and dragging == null:
-            hovering.push_to_front()
-            hovering.click()
-        elif Input.is_action_just_pressed("RMB") and dragging == null:
-            hovering.flip()
     
     if event is InputEventMouseMotion:
         global_position = get_global_mouse_position()

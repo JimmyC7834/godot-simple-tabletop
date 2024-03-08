@@ -4,6 +4,7 @@ extends Area2D
 @export var texture: Texture2D
 
 @export var is_dragging: bool = false
+@export var is_hovering: bool = false
 @export var degree: int = 0
 @export var can_drag: bool = true
 @export var can_be_dropped: bool = true
@@ -15,11 +16,12 @@ var rotate_span: float = 0.1
 var flip_span: float = 0.1
 var width: int
 
-#signal on_clicked
-#signal on_dragged
-#signal on_dropped
-#signal on_dropped_on(d: DragDropControl)
-#signal on_flipped
+signal on_clicked
+signal on_dragged
+signal on_dropped
+signal on_dropped_on(d: DragDropObject)
+signal on_flipped
+signal on_hovered
 
 func _init(_width: int = DragDropServer.DEFAULT_OBJECT_WIDTH):
     width = _width
@@ -34,6 +36,9 @@ func _ready():
     add_child(collision_shape)
     collision_shape.shape = RectangleShape2D.new()
     collision_shape.shape.size = texture.get_size() * front.scale   
+    
+    area_entered.connect(check_hovered)
+    area_exited.connect(check_unhovered)
 
 func start_dragging():
     if can_drag:
@@ -41,6 +46,7 @@ func start_dragging():
 
 func end_dragging():
     _set_dragging.rpc(false)
+    on_dropped.emit()
 
 @rpc("any_peer", "call_local", "reliable")
 func _set_dragging(value: bool):
@@ -48,6 +54,7 @@ func _set_dragging(value: bool):
 
 func drag(d_pos: Vector2):
     _drag.rpc(d_pos)
+    on_dragged.emit()
 
 @rpc("any_peer", "call_local", "reliable")
 func _drag(d_pos: Vector2):
@@ -63,17 +70,19 @@ func _move_to(pos: Vector2):
 
 func dropped_by(d: DragDropObject):
     if can_be_dropped:
-        pass
+        on_dropped_on.emit()
 
 func click():
     if can_click:
         print("clicked ", name)
+    on_clicked.emit()
 
 func push_to_front():
     DragDropServer.push_to_front(self)
 
 func flip():
     _flip.rpc()
+    on_flipped.emit()
 
 @rpc("any_peer", "call_local", "reliable")
 func _flip():
@@ -92,3 +101,16 @@ func rotate_object(d: int):
 func _rotate_object(d: int):
     var t = create_tween().set_ease(Tween.EASE_OUT)
     t.tween_property(self, "rotation", deg_to_rad(d), rotate_span)
+
+func check_hovered(area: Area2D):
+    if area is DragDropCursor:
+        _set_is_hovering.rpc(true)
+        on_hovered.emit()
+
+func check_unhovered(area: Area2D):
+    if area is DragDropCursor:
+        _set_is_hovering.rpc(false)
+
+@rpc("any_peer", "call_local", "reliable")
+func _set_is_hovering(value: bool):
+    is_hovering = value
