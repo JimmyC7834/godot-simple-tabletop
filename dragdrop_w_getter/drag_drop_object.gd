@@ -63,11 +63,7 @@ func _move_to(pos: Vector2):
 
 func dropped_by(d: DragDropObject):
     if can_be_dropped:
-        _dropped_by.rpc(d)
-
-@rpc("any_peer", "call_local", "reliable")
-func _dropped_by(d: DragDropObject):
-    print(name, " dropped by ", d.name)
+        pass
 
 func click():
     if can_click:

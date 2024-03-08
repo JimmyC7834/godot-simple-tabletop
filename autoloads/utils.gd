@@ -5,5 +5,7 @@ func delay(t: float):
 
 func get_texture_by_path(path: String) -> Texture:
     var img = Image.new()
-    img.load(path)
+    var error = img.load(path)
+    if error:
+        print("client missing texture: ", path)
     return ImageTexture.create_from_image(img)

@@ -11,6 +11,11 @@ func _ready():
     spawn_card.pressed.connect(
         func():
             card_selection.show()
-            var card = await card_selection.on_card_clicked
-            DragDropServer.new_card.rpc(card)
+            var path = await card_selection.on_card_clicked
+            DragDropServer.new_card.rpc(path)
             card_selection.hide())
+
+    spawn_deck.pressed.connect(
+        func():
+            var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+            DragDropServer.new_card_pile.rpc(path))
