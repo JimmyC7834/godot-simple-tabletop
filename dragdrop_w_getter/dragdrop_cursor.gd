@@ -55,7 +55,7 @@ func _input(event):
                 hovering.push_to_front()
                 dragging = hovering
         else:
-            dragging.drag(event.relative)
+            dragging.drag((Vector2.ONE / DragDropServer.camera.zoom) * event.relative)
         
 
 func choose_dragdrop_object() -> DragDropObject:

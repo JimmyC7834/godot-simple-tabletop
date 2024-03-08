@@ -40,7 +40,7 @@ texture_repeat = 2
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_a5gaw")
 region_enabled = true
-region_rect = Rect2(0, 0, 10240, 10240)
+region_rect = Rect2(0, 0, 102400, 102400)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
