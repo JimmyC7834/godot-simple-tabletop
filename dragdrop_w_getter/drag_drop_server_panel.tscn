@@ -1,11 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://c475cacqkbqi"]
+[gd_scene load_steps=14 format=3 uid="uid://c475cacqkbqi"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/drag_drop_server_panel.gd" id="1_t1hwg"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://multiplayer/lobby_ui.tscn" id="1_v1mw5"]
 [ext_resource type="PackedScene" uid="uid://0is158vlvnit" path="res://ui/control_bar.tscn" id="2_8wfmf"]
+[ext_resource type="Texture2D" uid="uid://cs7fusy316jwn" path="res://assets/texture_09.png" id="2_a5gaw"]
 [ext_resource type="Script" path="res://hand.gd" id="4_bn8jo"]
 [ext_resource type="PackedScene" uid="uid://dy1eap07t04ma" path="res://panel item/play_card.tscn" id="5_1si5m"]
 [ext_resource type="Texture2D" uid="uid://drt4wxcr4seih" path="res://assets/ccs_w66_001.png" id="6_s6gkf"]
+[ext_resource type="Script" path="res://dragdrop_w_getter/camera_controller.gd" id="7_xeqe8"]
 
 [sub_resource type="Curve" id="Curve_yihh3"]
 min_value = -1.0
@@ -28,14 +30,29 @@ point_count = 2
 [sub_resource type="Gradient" id="Gradient_21mkc"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
-[node name="DragDropServerPanel" type="Node2D"]
+[node name="DragDropServerPanel" type="Node2D" node_paths=PackedStringArray("lobby_ui")]
 script = ExtResource("1_t1hwg")
+lobby_ui = NodePath("Camera2D/CanvasLayer/LobbyUI")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -1
+texture_repeat = 2
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_a5gaw")
+region_enabled = true
+region_rect = Rect2(0, 0, 10240, 10240)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
 spawn_path = NodePath("..")
 
-[node name="ControlBar" parent="." instance=ExtResource("2_8wfmf")]
+[node name="Camera2D" type="Camera2D" parent="."]
+z_index = -1
+script = ExtResource("7_xeqe8")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="ControlBar" parent="Camera2D/CanvasLayer" instance=ExtResource("2_8wfmf")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -46,9 +63,9 @@ grow_vertical = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LobbyUI" parent="." instance=ExtResource("1_v1mw5")]
+[node name="LobbyUI" parent="Camera2D/CanvasLayer" instance=ExtResource("1_v1mw5")]
 
-[node name="Hand" type="Node2D" parent="."]
+[node name="Hand" type="Node2D" parent="Camera2D/CanvasLayer"]
 script = ExtResource("4_bn8jo")
 spread_curve = SubResource("Curve_yihh3")
 scale_curve = SubResource("Curve_w06ye")
@@ -60,23 +77,23 @@ y_spread = 15
 card_rotation = 0.05
 tween_duration = 0.2
 
-[node name="Hand" type="Node2D" parent="Hand"]
+[node name="Hand" type="Node2D" parent="Camera2D/CanvasLayer/Hand"]
 position = Vector2(576, 640)
 
-[node name="Card" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
 
-[node name="Card2" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card2" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
 
-[node name="Card3" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card3" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
 
-[node name="Card4" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card4" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
 
-[node name="Card5" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card5" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
 
-[node name="Card6" parent="Hand/Hand" instance=ExtResource("5_1si5m")]
+[node name="Card6" parent="Camera2D/CanvasLayer/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")

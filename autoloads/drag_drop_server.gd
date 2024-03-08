@@ -4,6 +4,7 @@ const CARD_PILE = preload("res://panel item/card_pile.tscn")
 const PLAY_CARD = preload("res://panel item/play_card.tscn")
 const DEFAULT_OBJECT_WIDTH = 200
 
+var camera: Camera2D
 var cards: Array[DragDropObject]
 
 @rpc("any_peer", "call_local", "reliable")

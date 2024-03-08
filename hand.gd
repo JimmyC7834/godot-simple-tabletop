@@ -35,6 +35,7 @@ func _process(_delta):
 func register_cards():
     for c in hand.get_children():
         register_card(c)
+        #c.set_personal_view(true)
 
 func register_card(c: Node2D):
     if c is DragDropObject:
