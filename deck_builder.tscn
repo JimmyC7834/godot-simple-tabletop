@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://e3wmm6gsk785"]
+
+[ext_resource type="Script" path="res://deck_builder.gd" id="1_x22r2"]
+[ext_resource type="PackedScene" uid="uid://s3lbv2yysqr1" path="res://card_selection_screen.tscn" id="2_udvbr"]
+
+[node name="Control" type="Control" node_paths=PackedStringArray("card_selection", "deck_display", "save_btn", "load_btn")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x22r2")
+card_selection = NodePath("VBoxContainer/HBoxContainer/CardSelection")
+deck_display = NodePath("VBoxContainer/HBoxContainer/DeckDisplay")
+save_btn = NodePath("VBoxContainer/Panel/MenuBar/Save Deck")
+load_btn = NodePath("VBoxContainer/Panel/MenuBar/Load Deck")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="MenuBar" type="HBoxContainer" parent="VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+alignment = 2
+
+[node name="Save Deck" type="Button" parent="VBoxContainer/Panel/MenuBar"]
+layout_mode = 2
+text = "Save Deck"
+
+[node name="Load Deck" type="Button" parent="VBoxContainer/Panel/MenuBar"]
+layout_mode = 2
+text = "Load Deck"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardSelection" parent="VBoxContainer/HBoxContainer" instance=ExtResource("2_udvbr")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeckDisplay" type="RichTextLabel" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+
+[node name="FileDialog" type="FileDialog" parent="."]

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DeckRes" load_steps=2 format=3 uid="uid://dp7m5yu2uhmwn"]
+
+[ext_resource type="Script" path="res://res_deck.gd" id="1_qtpr7"]
+
+[resource]
+script = ExtResource("1_qtpr7")
+cards_dict = {}

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardCollectionRes" load_steps=5 format=3 uid="uid://du5utowmldmxd"]
+
+[ext_resource type="Script" path="res://res_card_collection.gd" id="1_hjael"]
+[ext_resource type="Texture2D" uid="uid://drt4wxcr4seih" path="res://assets/ccs_w66_001.png" id="1_vk0ny"]
+[ext_resource type="Texture2D" uid="uid://bdqa78debya0d" path="res://assets/ccs_w66_001sp.png" id="2_wodf5"]
+[ext_resource type="Texture2D" uid="uid://bijk8kmfhwt21" path="res://assets/ccs_w66_002.png" id="3_lvnbo"]
+
+[resource]
+script = ExtResource("1_hjael")
+cards = Array[Texture2D]([ExtResource("1_vk0ny"), ExtResource("2_wodf5"), ExtResource("3_lvnbo")])
