@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://s3lbv2yysqr1"]
+
+[ext_resource type="Script" path="res://ui/card_selection_screen.gd" id="1_e41le"]
+
+[node name="CardSelection" type="Panel" node_paths=PackedStringArray("label", "card_display")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e41le")
+label = NodePath("RichTextLabel")
+card_display = NodePath("TextureRect")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 2

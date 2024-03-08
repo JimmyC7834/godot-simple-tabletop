@@ -24,7 +24,7 @@ func _input(event):
         elif Input.is_action_just_released("LMB") and dragging == null:
             hovering.push_to_front()
             hovering.click()
-        elif Input.is_action_just_pressed("RMB"):
+        elif Input.is_action_just_pressed("RMB") and dragging == null:
             hovering.flip()
     
     if dragging != null:

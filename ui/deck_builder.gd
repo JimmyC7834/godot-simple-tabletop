@@ -6,17 +6,10 @@ var deck: Dictionary
 @export var deck_display: RichTextLabel
 @export var save_btn: Button
 @export var load_btn: Button
-var file_dialog: FileDialog
 
 signal on_deck_changed
 
 func _ready():
-    file_dialog = FileDialog.new()
-    file_dialog.access = FileDialog.ACCESS_USERDATA
-    file_dialog.filters = ["*.tres"]
-    file_dialog.size = Vector2(300, 400)
-    add_child(file_dialog)
-    
     save_btn.pressed.connect(save_deck)
     load_btn.pressed.connect(load_deck)
     card_selection.on_card_clicked.connect(card_clicked)
@@ -33,9 +26,7 @@ func update_deck_display():
         deck_display.text = ""
         return
     
-    var img = Image.new()
-    img.load(deck.keys()[0])
-    var img_size = ImageTexture.create_from_image(img).get_size() * card_selection.IMG_SCALE
+    var img_size = Utils.get_texture_by_path(deck.keys()[0]).get_size() * card_selection.IMG_SCALE
     var img_size_text = "%dx%d" % [img_size.x, img_size.y]
     deck_display.text = ""
     for k in deck.keys():
@@ -58,17 +49,13 @@ func remove_one(path: String):
     on_deck_changed.emit()
 
 func save_deck():
-    file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-    file_dialog.popup_centered()
-    var path = await file_dialog.file_selected
+    var path = await Database.choose_path(FileDialog.FILE_MODE_SAVE_FILE)
     print(path)
     if len(deck) > 0:
         Database.save_file(generate_deck(), path)
 
 func load_deck():
-    file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-    file_dialog.popup_centered()
-    var path = await file_dialog.file_selected
+    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
     var res = Database.load_file(path)
     if res is DeckRes:
         deck = res.cards_dict

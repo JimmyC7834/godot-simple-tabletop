@@ -1,18 +1,19 @@
 extends Node
 
 const SERVER_CARD = preload("res://dragdrop_w_getter/server_card.tscn")
-const CCS_W_66_001 = preload("res://assets/ccs_w66_001.png")
 const DEFAULT_OBJECT_WIDTH = 200
 
 var cards: Array[DragDropObject]
 
-func _ready():
-    for i in range(5):
-        new_card(CCS_W_66_001)
-
-func new_card(texture: Texture2D):
+@rpc("any_peer", "call_local", "reliable")
+func new_card(path: String):
     var inst = SERVER_CARD.instantiate()
+    inst.texture = Utils.get_texture_by_path(path)
     add_child(inst)
+
+func clear_all_card():
+    for c in get_children():
+        c.queue_free()
 
 func push_to_front(obj: DragDropObject):
     var i: int = get_children().find(obj)

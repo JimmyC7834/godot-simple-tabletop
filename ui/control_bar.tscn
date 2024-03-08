@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://0is158vlvnit"]
+
+[ext_resource type="Script" path="res://ui/control_bar.gd" id="1_u7tj0"]
+[ext_resource type="PackedScene" uid="uid://s3lbv2yysqr1" path="res://ui/card_selection_screen.tscn" id="2_xiwdh"]
+
+[node name="ControlBar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u7tj0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -68.0
+offset_right = 128.0
+offset_bottom = 68.0
+grow_vertical = 2
+
+[node name="SpawnCard" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Spawn Card"
+
+[node name="SpawnObject" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Spawn Object"
+
+[node name="SpawnCardPile" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Spawn CardPile"
+
+[node name="SpawnDeck" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Spawn Deck"
+
+[node name="CardSelection" parent="." instance=ExtResource("2_xiwdh")]
+visible = false
+layout_mode = 1

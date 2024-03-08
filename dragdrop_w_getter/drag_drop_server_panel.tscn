@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c475cacqkbqi"]
+[gd_scene load_steps=4 format=3 uid="uid://c475cacqkbqi"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/drag_drop_server_panel.gd" id="1_t1hwg"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://multiplayer/lobby_ui.tscn" id="1_v1mw5"]
+[ext_resource type="PackedScene" uid="uid://0is158vlvnit" path="res://ui/control_bar.tscn" id="2_8wfmf"]
 
 [node name="DragDropServerPanel" type="Node2D"]
 script = ExtResource("1_t1hwg")
@@ -9,5 +10,16 @@ script = ExtResource("1_t1hwg")
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
 spawn_path = NodePath("..")
+
+[node name="ControlBar" parent="." instance=ExtResource("2_8wfmf")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 1
+grow_vertical = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="LobbyUI" parent="." instance=ExtResource("1_v1mw5")]

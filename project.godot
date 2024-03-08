@@ -17,8 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DragDropServer="*res://dragdrop_w_getter/drag_drop_server.gd"
+DragDropServer="*res://autoloads/drag_drop_server.gd"
 Database="*res://autoloads/database.gd"
+Utils="*res://autoloads/utils.gd"
 
 [input]
 
