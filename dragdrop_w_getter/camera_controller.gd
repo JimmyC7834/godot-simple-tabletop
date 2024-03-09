@@ -23,12 +23,13 @@ func _input(event):
         zoom -= Vector2.ONE * D_ZOOM
         zoom = max(ZOOM_MIN, zoom.x) * Vector2.ONE
 
-    if Input.is_action_just_pressed("ROTATE_LEFT"):
-        degree -= 45
-        rotate_camera_to(degree)
-    elif Input.is_action_just_pressed("ROTATE_RIGHT"):
-        degree += 45
-        rotate_camera_to(degree)
+    if Input.is_action_pressed("CAMERA_DRAG"):
+        if Input.is_action_just_pressed("ROTATE_LEFT"):
+            degree -= 45
+            rotate_camera_to(degree)
+        elif Input.is_action_just_pressed("ROTATE_RIGHT"):
+            degree += 45
+            rotate_camera_to(degree)
     
     update_label()
 

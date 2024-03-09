@@ -1,9 +1,10 @@
 class_name DragDropCursor
 extends Area2D
 
-const DRAG_THRESHOLD = 5
+const DRAG_THRESHOLD: int = 5
+const CONTEXT_MENU_OFFSET: Vector2 = Vector2(580, 325)
 
-@onready var popup_menu: PopupMenu = $PopupMenu
+@onready var context_menu: PopupMenu = $PopupMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 # card control variable
@@ -34,6 +35,12 @@ func _input(event):
         
     hovering = choose_dragdrop_object()
     current_state.call(event)
+
+    if Input.is_action_just_pressed("RMB"):
+        if hovering != null or hovering in selecting:
+            # context menu
+            context_menu.popup_on_parent(
+                Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
 
     #if hovering != null:
         #if Input.is_action_just_pressed("LMB") and !selected_any():
@@ -75,6 +82,8 @@ func _input(event):
                 #selecting.append(hovering)
         #else:
             #selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
+
+############################# STATE MACHINE ##############################
 
 # idle state of the cursor
 func state_empty(event):
@@ -137,11 +146,13 @@ func state_single_clicked(event):
     if event is InputEventMouseButton and Input.is_action_just_released("LMB"):
         # not dragged, do click
         selecting[0].click()
+        current_state = state_empty     
 
 func state_single_drag(event):
     if event is InputEventMouseMotion:
         global_position = get_global_mouse_position()
         selecting[0].drag(get_vec_in_cam(event.relative))
+    rotation_action_check()
     
     if event is InputEventMouseButton and Input.is_action_just_released("LMB"):
         if hovering != null:
@@ -156,7 +167,7 @@ func state_selected(event):
     if event is InputEventMouseMotion:
         # move all
         global_position = get_global_mouse_position()
-
+    
     if event is InputEventMouseButton:
         if Input.is_action_just_pressed("LMB"):
             # start drag all the objects if mouse is on one of them
@@ -175,6 +186,8 @@ func state_selected_drag(event):
         # drag all the objects if mouse is on one of them
         selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
     
+    rotation_action_check()
+    
     if event is InputEventMouseButton:
         if Input.is_action_just_released("LMB"):
             selecting.map(func(c): c.end_dragging())
@@ -185,7 +198,25 @@ func state_selected_drag(event):
                 # dropped objects on something
                 selecting.map(func(c): hovering.dropped_by(c))
                 selecting = []
-                current_state = state_empty                
+                current_state = state_empty
+
+########################  HELPER FUNC  ############################
+
+func rotation_action_check():
+    if selected_any():
+        if Input.is_action_just_pressed("ROTATE_LEFT"):
+            rotate_selected(-90)
+        elif Input.is_action_just_pressed("ROTATE_RIGHT"):
+            rotate_selected(90)
+
+func rotate_selected(d_degree: int):
+    if selecting.size() == 0:
+        return
+
+    var offset: Vector2 = get_global_mouse_position() - selecting[0].global_position
+    selecting.map(func(c):
+        c.move_to(c.global_position + offset)
+        c.rotate_object(d_degree))
 
 func set_default_cursor_shape():
     cursor_shape.size = Vector2.ONE
