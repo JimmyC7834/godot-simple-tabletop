@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dea0ynlmnxn45"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/dragdrop_cursor.gd" id="1_aqae7"]
-[ext_resource type="Texture2D" uid="uid://devd657f8bf0l" path="res://icon.svg" id="1_k134n"]
+[ext_resource type="Texture2D" uid="uid://l4hgcjtnu452" path="res://assets/square.png" id="2_6bw5h"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mcwr0"]
 properties/0/path = NodePath(".:position")
@@ -15,9 +15,9 @@ b = Vector2(0, 1)
 script = ExtResource("1_aqae7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-self_modulate = Color(1, 1, 1, 0.592157)
+self_modulate = Color(0.74902, 0.945098, 1, 0.592157)
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_k134n")
+texture = ExtResource("2_6bw5h")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_mcwr0")

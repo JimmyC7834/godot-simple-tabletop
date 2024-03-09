@@ -24,6 +24,10 @@ spawn_path = NodePath("..")
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("label")]
 z_index = -1
 ignore_rotation = false
+limit_left = -10240
+limit_top = -10240
+limit_right = 10240
+limit_bottom = 10240
 script = ExtResource("7_xeqe8")
 label = NodePath("../CanvasLayer/Label")
 

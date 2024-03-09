@@ -1,6 +1,7 @@
 extends Control
 
 var deck: Dictionary
+var card_textures: Dictionary
 
 @export var card_selection: Control
 @export var deck_display: RichTextLabel
@@ -64,9 +65,14 @@ func load_deck():
     var res = Database.load_file(path)
     if res is DeckRes:
         deck = res.cards_dict
+        card_textures = res.card_textures
         on_deck_changed.emit()
 
 func generate_deck() -> DeckRes:
     var res = DeckRes.new()
     res.cards_dict = deck
+    for key in deck:
+        var img = Image.load_from_file(key)
+        img.compress(Image.COMPRESS_BPTC, Image.COMPRESS_SOURCE_GENERIC)
+        res.card_textures[key] = img
     return res

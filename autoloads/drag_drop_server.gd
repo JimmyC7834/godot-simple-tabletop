@@ -14,8 +14,20 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card: ", path)
         inst.texture = texture
-        inst.global_position = pos
         add_child(inst)
+        inst.move_to(pos)
+        return inst
+
+    return null
+
+@rpc("any_peer", "call_local", "reliable")
+func new_card_wtex(texture: Texture2D, pos: Vector2 = Vector2.ZERO) -> PlayCard:
+    var inst = PLAY_CARD.instantiate()
+    if texture is Texture2D:
+        print(get_multiplayer_authority(), " added card_wtex: ", texture)
+        inst.texture = texture
+        add_child(inst)
+        inst.move_to(pos)
         return inst
 
     return null
