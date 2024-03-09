@@ -9,6 +9,7 @@ const CM_PRIVATE = 1
 const CM_DELETE = 2
 const CM_GATHER = 3
 const CM_SHUFFLE = 4
+const CM_SPAWN_DECK = 5
 
 @onready var context_menu: PopupMenu = $PopupMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -28,6 +29,7 @@ var menu_func_table = {
     CM_DELETE: context_menu_delete,
     CM_GATHER: context_menu_gather,
     CM_SHUFFLE: context_menu_shuffle,
+    CM_SPAWN_DECK: context_menu_spawn_deck,
 }
 
 # state machine
@@ -224,14 +226,18 @@ func open_context_menu():
         context_menu.set_item_disabled(CM_PRIVATE, true)
         context_menu.set_item_disabled(CM_DELETE, true)
         context_menu.set_item_disabled(CM_FLIP, true)
+        context_menu.set_item_disabled(CM_GATHER, true)
         context_menu.set_item_disabled(CM_SHUFFLE, true)
+        context_menu.set_item_disabled(CM_SPAWN_DECK, false)
         
     else:
         context_menu.set_item_disabled(CM_FLIP, false)
         context_menu.set_item_disabled(CM_PRIVATE, false)
         context_menu.set_item_disabled(CM_DELETE, false)
         context_menu.set_item_disabled(CM_FLIP, false)
+        context_menu.set_item_disabled(CM_GATHER, false)
         context_menu.set_item_disabled(CM_SHUFFLE, false)
+        context_menu.set_item_disabled(CM_SPAWN_DECK, true)
         
         if not hovering in selecting:
             selecting.append(hovering)
@@ -278,6 +284,19 @@ func context_menu_shuffle(id: int):
 
         selecting = []
         current_state = state_empty
+
+func context_menu_spawn_deck(id: int):
+    if selected_any():
+        selecting = []
+        current_state = state_empty
+    
+    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var res = Database.load_file(path)
+    if res is DeckRes:
+        for key in res.cards_dict:
+            for i in range(res.cards_dict[key]):
+                var inst = DragDropServer.new_card(key)
+                inst.move_to(global_position)
 
 ########################  HELPER FUNC  ############################
 
