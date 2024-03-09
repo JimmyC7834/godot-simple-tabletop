@@ -6,6 +6,7 @@ const DRAG_THRESHOLD = 5
 @onready var popup_menu: PopupMenu = $PopupMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
+# card control variable
 var selecting: Array[DragDropObject] = []
 var hovering: DragDropObject
 
@@ -14,61 +15,190 @@ var is_dragging: bool = false
 
 var original_position: Vector2
 
+# state machine
+var current_state: Callable
+
 func _enter_tree():
     set_multiplayer_authority(name.to_int())
 
 func _ready():
     cursor_shape = RectangleShape2D.new()
-    cursor_shape.size = Vector2.ONE
     collision_shape.shape = cursor_shape
+    set_default_cursor_shape()
+    
+    current_state = state_empty
 
 func _input(event):
     if not is_multiplayer_authority():
         return
-    
-    hovering = choose_dragdrop_object()
-
-    if hovering != null:
-        if Input.is_action_just_pressed("LMB") and !selected_any():
-            original_position = global_position
-            selecting.append(hovering)
-            selecting.map(func(c): c.start_dragging())
-        elif Input.is_action_just_released("LMB") and !selected_any():
-            hovering.push_to_front()
-            hovering.click()
-        elif Input.is_action_just_pressed("RMB") and !selected_any():
-            hovering.flip()
-    
-    if selecting != null:
-        if Input.is_action_just_pressed("ROTATE_LEFT"):
-            selecting.map(func(c): c.move_to(global_position))
-            selecting.map(func(c): c.rotate_object(-90))
-        elif Input.is_action_just_pressed("ROTATE_RIGHT"):
-            selecting.map(func(c): c.move_to(global_position))
-            selecting.map(func(c): c.rotate_object(90))
-        elif Input.is_action_just_pressed("RMB"):
-            selecting.map(func(c): c.flip())
         
-        # drop the card
-        if Input.is_action_just_released("LMB"):
-            if hovering != null:
-                selecting.map(func(c): hovering.dropped_by(c))
-            selecting.map(func(c): c.end_dragging())
-            print(selecting, " dropped")
-            selecting = []
-    
+    hovering = choose_dragdrop_object()
+    current_state.call(event)
+
+    #if hovering != null:
+        #if Input.is_action_just_pressed("LMB") and !selected_any():
+            #original_position = global_position
+            #selecting.append(hovering)
+            #selecting.map(func(c): c.start_dragging())
+        #elif Input.is_action_just_released("LMB") and !selected_any():
+            #hovering.push_to_front()
+            #hovering.click()
+        #elif Input.is_action_just_pressed("RMB") and !selected_any():
+            #hovering.flip()
+    #
+    #if selecting != null:
+        #if Input.is_action_just_pressed("ROTATE_LEFT"):
+            #selecting.map(func(c): c.move_to(global_position))
+            #selecting.map(func(c): c.rotate_object(-90))
+        #elif Input.is_action_just_pressed("ROTATE_RIGHT"):
+            #selecting.map(func(c): c.move_to(global_position))
+            #selecting.map(func(c): c.rotate_object(90))
+        #elif Input.is_action_just_pressed("RMB"):
+            #selecting.map(func(c): c.flip())
+        #
+        ## drop the card
+        #if Input.is_action_just_released("LMB"):
+            #if hovering != null:
+                #selecting.map(func(c): hovering.dropped_by(c))
+            #selecting.map(func(c): c.end_dragging())
+            #print(selecting, " dropped")
+            #selecting = []
+    #
+    #if event is InputEventMouseMotion:
+        #global_position = get_global_mouse_position()
+        #
+        #if !selected_any():
+            #if hovering != null and original_position.distance_to(global_position) > DRAG_THRESHOLD and Input.is_action_pressed("LMB"):
+                #print("picked ", hovering.name)
+                #hovering.start_dragging()
+                #hovering.push_to_front()
+                #selecting.append(hovering)
+        #else:
+            #selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
+
+# idle state of the cursor
+func state_empty(event):
     if event is InputEventMouseMotion:
         global_position = get_global_mouse_position()
-        
-        if !selected_any():
-            if hovering != null and original_position.distance_to(global_position) > DRAG_THRESHOLD and Input.is_action_pressed("LMB"):
-                print("picked ", hovering.name)
-                hovering.start_dragging()
+    elif event is InputEventMouseButton:
+        if Input.is_action_just_pressed("LMB"):
+            original_position = global_position
+            if hovering == null:
+                print("start selection")
+                current_state = state_dragging
+            else:
+                print("clicked on ", hovering)
                 hovering.push_to_front()
-                selecting.append(hovering)
-        else:
-            selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
+                selecting = [hovering]
+                current_state = state_single_clicked
+
+# state where the cursor is dragging with nothing selected
+func state_dragging(event):
+    if event is InputEventMouseMotion:
+        # create selection area
+        global_position = get_global_mouse_position()
         
+        if original_position.distance_to(global_position) < DRAG_THRESHOLD:
+            return
+        
+        cursor_shape.size = abs(global_position - original_position)
+        var offset = cursor_shape.size / 2.0
+        if global_position.x < original_position.x:
+            offset.x *= -1
+        if global_position.y < original_position.y:
+            offset.y *= -1
+            
+        collision_shape.global_position = original_position + offset
+    elif event is InputEventMouseButton:
+        # select the cards
+        if Input.is_action_just_released("LMB"):
+            # dragged selection area, get all objects covered
+            selecting = get_all_dragdrop_objects()
+            print("selected ", selecting)
+            set_default_cursor_shape()
+            if selected_any():
+                current_state = state_selected
+            else:
+                # no object selected, return to idle state
+                current_state = state_empty
+
+# state where one card is clicked for drag n drop or click
+func state_single_clicked(event):
+    assert(len(selecting) == 1)
+    if event is InputEventMouseMotion:
+        global_position = get_global_mouse_position()
+    
+        if original_position.distance_to(global_position) > DRAG_THRESHOLD:
+            # start drag
+            print("start dragging ", selecting)
+            selecting[0].start_dragging()
+            current_state = state_single_drag
+    
+    if event is InputEventMouseButton and Input.is_action_just_released("LMB"):
+        # not dragged, do click
+        selecting[0].click()
+
+func state_single_drag(event):
+    if event is InputEventMouseMotion:
+        global_position = get_global_mouse_position()
+        selecting[0].drag(get_vec_in_cam(event.relative))
+    
+    if event is InputEventMouseButton and Input.is_action_just_released("LMB"):
+        if hovering != null:
+            hovering.dropped_by(selecting[0])
+        selecting[0].end_dragging()
+        print("drop ", selecting)
+        current_state = state_empty
+
+# state where any number of objects is selected by cursor
+func state_selected(event):
+    assert(len(selecting) > 0)
+    if event is InputEventMouseMotion:
+        # move all
+        global_position = get_global_mouse_position()
+
+    if event is InputEventMouseButton:
+        if Input.is_action_just_pressed("LMB"):
+            # start drag all the objects if mouse is on one of them
+            if hovering in selecting:
+                print("start dragging all ", selecting)
+                selecting.map(func(c): c.start_dragging())
+                current_state = state_selected_drag
+            else:
+                selecting = []
+                current_state = state_empty                
+
+func state_selected_drag(event):
+    if event is InputEventMouseMotion:
+        # move all
+        global_position = get_global_mouse_position()
+        # drag all the objects if mouse is on one of them
+        selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
+    
+    if event is InputEventMouseButton:
+        if Input.is_action_just_released("LMB"):
+            selecting.map(func(c): c.end_dragging())
+            if hovering == null:
+                # just dragged the objects
+                current_state = state_selected
+            else:
+                # dropped objects on something
+                selecting.map(func(c): hovering.dropped_by(c))
+                selecting = []
+                current_state = state_empty                
+
+func set_default_cursor_shape():
+    cursor_shape.size = Vector2.ONE
+    collision_shape.global_position = global_position
+
+func get_all_dragdrop_objects() -> Array[DragDropObject]:
+    var areas: Array[Area2D] = get_overlapping_areas().filter(
+        func(c): return c is DragDropObject and not c.is_dragging)
+    
+    var cards: Array[DragDropObject]
+    cards.append_array(areas)
+
+    return cards
 
 func choose_dragdrop_object() -> DragDropObject:
     var cards: Array[Area2D] = get_overlapping_areas().filter(
