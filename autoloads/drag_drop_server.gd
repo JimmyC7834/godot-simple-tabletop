@@ -1,6 +1,6 @@
 extends Node
 
-const CARD_PILE = preload("res://panel item/card_pile.tscn")
+
 const PLAY_CARD = preload("res://panel item/play_card.tscn")
 const DEFAULT_OBJECT_WIDTH = 200
 
@@ -20,16 +20,16 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
 
     return null
 
-@rpc("any_peer", "call_local", "reliable")
-func new_card_pile(path: String) -> CardPile:
-    var inst = CARD_PILE.instantiate()
-    var res = Database.load_file(path)
-    if res is DeckRes:
-        inst.load_deck(res)
-        add_child(inst)
-        return inst
-
-    return null
+#@rpc("any_peer", "call_local", "reliable")
+#func new_card_pile(path: String) -> CardPile:
+    #var inst = CARD_PILE.instantiate()
+    #var res = Database.load_file(path)
+    #if res is DeckRes:
+        #inst.load_deck(res)
+        #add_child(inst)
+        #return inst
+#
+    #return null
 
 func clear_all_card():
     for c in get_children():

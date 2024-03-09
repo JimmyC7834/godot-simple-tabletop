@@ -14,14 +14,15 @@ func _ready():
     DirAccess.make_dir_absolute(TEXTURE_PATH)
     
     file_dialog = FileDialog.new()
-    file_dialog.access = FileDialog.ACCESS_USERDATA
+    file_dialog.access = FileDialog.ACCESS_FILESYSTEM
     file_dialog.filters = ["*.tres"]
+    file_dialog.use_native_dialog = true
     file_dialog.size = Vector2(400, 600)
     add_child(file_dialog)
 
 func choose_path(file_mode: FileDialog.FileMode):
     file_dialog.popup_centered()
-    return await file_dialog.file_selected
+    return await file_dialog.files_selected
 
 func save_file(res: Resource, path: String, file_name: String = ""):
     ResourceSaver.save(res, path + file_name)

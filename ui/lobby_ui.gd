@@ -2,8 +2,8 @@ class_name Lobby
 extends Control
 
 const PORT = 135
-@onready var ip_text = $HBoxContainer/IP
-@onready var port_text = $HBoxContainer/Port
+@export var ip_text: TextEdit
+@export var port_text: TextEdit
 
 var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 

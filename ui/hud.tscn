@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7mgixh7vl5uw"]
+
+[ext_resource type="PackedScene" uid="uid://delk8l8g0mubo" path="res://ui/game_ui.tscn" id="1_1cwuw"]
+[ext_resource type="Script" path="res://ui/login_screen.gd" id="1_u7hih"]
+[ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://ui/lobby_ui.tscn" id="2_v3jao"]
+
+[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("lobby_ui")]
+script = ExtResource("1_u7hih")
+lobby_ui = NodePath("LobbyUI")
+
+[node name="GameUI" parent="." instance=ExtResource("1_1cwuw")]
+visible = false
+
+[node name="LobbyUI" parent="." instance=ExtResource("2_v3jao")]

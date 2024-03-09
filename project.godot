@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="simple-tabletop"
-run/main_scene="res://dragdrop_w_getter/drag_drop_server_panel.tscn"
+run/main_scene="res://ui/drag_drop_server_panel.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 DragDropServer="*res://autoloads/drag_drop_server.gd"
 Database="*res://autoloads/database.gd"
 Utils="*res://autoloads/utils.gd"
+Hud="*res://ui/hud.gd"
 
 [input]
 

@@ -22,6 +22,7 @@ offset_top = -68.0
 offset_right = 128.0
 offset_bottom = 68.0
 grow_vertical = 2
+alignment = 1
 
 [node name="SpawnCard" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -30,14 +31,6 @@ text = "Spawn Card"
 [node name="SpawnObject" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Spawn Object"
-
-[node name="SpawnCardPile" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Spawn CardPile"
-
-[node name="SpawnDeck" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Spawn Deck"
 
 [node name="CardSelection" parent="." instance=ExtResource("2_xiwdh")]
 visible = false

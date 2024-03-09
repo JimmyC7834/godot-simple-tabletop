@@ -12,7 +12,7 @@ var hovering: bool = false
 signal on_card_clicked(texture: Texture2D)
 
 func _ready():
-    show_cards(WS_SAKURA.cards)
+    load_cards(WS_SAKURA.cards)
     
     label.meta_clicked.connect(handle_card_click)
     label.meta_hover_started.connect(hovering_card)
@@ -32,7 +32,7 @@ func cancel_card_focus():
     hovering = false
     card_display.visible = false    
 
-func show_cards(textures: Array[Texture2D]):
+func load_cards(textures: Array[Texture2D]):
     if len(textures) == 0: return
     
     var img_size = textures[0].get_size() * IMG_SCALE
