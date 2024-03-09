@@ -9,9 +9,13 @@ const CM_PRIVATE = 1
 const CM_DELETE = 2
 const CM_GATHER = 3
 const CM_SHUFFLE = 4
-const CM_SPAWN_DECK = 5
 
-@onready var context_menu: PopupMenu = $PopupMenu
+const PM_SPAWN_CARD = 0
+const PM_SPAWN_OBJECT = 1
+const PM_SPAWN_DECK = 2
+
+@onready var panel_menu: PopupMenu = $PanelMenu
+@onready var card_menu: PopupMenu = $CardMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 # card control variable
@@ -23,13 +27,18 @@ var is_dragging: bool = false
 
 var original_position: Vector2
 
-var menu_func_table = {
+var card_menu_func_table = {
     CM_FLIP: context_menu_flip,
     CM_PRIVATE: context_menu_private,
     CM_DELETE: context_menu_delete,
     CM_GATHER: context_menu_gather,
     CM_SHUFFLE: context_menu_shuffle,
-    CM_SPAWN_DECK: context_menu_spawn_deck,
+}
+
+var panel_menu_func_table = {
+    PM_SPAWN_CARD: context_menu_spawn_card,
+    PM_SPAWN_OBJECT: context_menu_spawn_object,
+    PM_SPAWN_DECK: context_menu_spawn_deck,
 }
 
 # state machine
@@ -45,7 +54,8 @@ func _ready():
     
     current_state = state_empty
     
-    context_menu.id_pressed.connect(handle_context_menu)
+    card_menu.id_pressed.connect(handle_card_menu)
+    panel_menu.id_pressed.connect(handle_panel_menu)
 
 func _input(event):
     if not is_multiplayer_authority():
@@ -222,70 +232,84 @@ func state_selected_drag(event):
 
 func open_context_menu():
     if hovering == null:
-        context_menu.set_item_disabled(CM_FLIP, true)
-        context_menu.set_item_disabled(CM_PRIVATE, true)
-        context_menu.set_item_disabled(CM_DELETE, true)
-        context_menu.set_item_disabled(CM_FLIP, true)
-        context_menu.set_item_disabled(CM_GATHER, true)
-        context_menu.set_item_disabled(CM_SHUFFLE, true)
-        context_menu.set_item_disabled(CM_SPAWN_DECK, false)
-        
+        panel_menu.popup_on_parent(
+            Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
     else:
-        context_menu.set_item_disabled(CM_FLIP, false)
-        context_menu.set_item_disabled(CM_PRIVATE, false)
-        context_menu.set_item_disabled(CM_DELETE, false)
-        context_menu.set_item_disabled(CM_FLIP, false)
-        context_menu.set_item_disabled(CM_GATHER, false)
-        context_menu.set_item_disabled(CM_SHUFFLE, false)
-        context_menu.set_item_disabled(CM_SPAWN_DECK, true)
-        
         if not hovering in selecting:
             selecting.append(hovering)
-        context_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
+        card_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
 
-    context_menu.popup_on_parent(
-        Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
+        card_menu.popup_on_parent(
+            Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
 
-func handle_context_menu(id: int):
-    if id in menu_func_table:
-        menu_func_table[id].call(id)
+func handle_card_menu(id: int):
+    if id in card_menu_func_table:
+        card_menu_func_table[id].call()
 
-func context_menu_flip(id: int):
+func handle_panel_menu(id: int):
+    if id in panel_menu_func_table:
+        panel_menu_func_table[id].call()
+
+func context_menu_flip():
     if selected_any():
         selecting.map(func(c): c.flip())
-        selecting = []
-        current_state = state_empty    
+    
+    selecting = []
+    current_state = state_empty
 
-func context_menu_private(id: int):
-    context_menu.set_item_checked(CM_PRIVATE, !context_menu.is_item_checked(CM_PRIVATE))
+func context_menu_private():
+    card_menu.set_item_checked(CM_PRIVATE, !card_menu.is_item_checked(CM_PRIVATE))
     if selected_any():
-        selecting.map(func(c): c.set_private_value(context_menu.is_item_checked(CM_PRIVATE)))
-        selecting = []
-        current_state = state_empty
+        selecting.map(func(c): c.set_private_value(card_menu.is_item_checked(CM_PRIVATE)))
+    
+    selecting = []
+    current_state = state_empty
 
-func context_menu_delete(id: int):
+func context_menu_delete():
     if selected_any():
         selecting.map(func(c): c.delete())
         selecting = []
         current_state = state_empty
 
-func context_menu_gather(id: int):
+func context_menu_gather():
     if selected_any():
         selecting.map(func(c): c.move_to(selecting[0].global_position))
-        selecting = []
-        current_state = state_empty
+    
+    selecting = []
+    current_state = state_empty
 
-func context_menu_shuffle(id: int):
+func context_menu_shuffle():
     if selected_any():
         while selecting.size() > 0:
             var c = selecting.pick_random()
             c.push_to_front()
             selecting.erase(c)
+    
+    selecting = []
+    current_state = state_empty
 
+func context_menu_spawn_card():
+    if selected_any():
         selecting = []
         current_state = state_empty
+    
+    var path = await Database.choose_path(
+        FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
+    var inst = DragDropServer.new_card(path)
+    if inst != null:
+        inst.move_to(global_position)
 
-func context_menu_spawn_deck(id: int):
+func context_menu_spawn_object():
+    if selected_any():
+        selecting = []
+        current_state = state_empty
+    
+    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var inst = DragDropServer.new_object(path)
+    if inst != null:
+        inst.move_to(global_position)
+
+func context_menu_spawn_deck():
     if selected_any():
         selecting = []
         current_state = state_empty
@@ -324,7 +348,7 @@ func get_all_dragdrop_objects() -> Array[DragDropObject]:
     var areas: Array[Area2D] = get_overlapping_areas().filter(
         func(c): return c is DragDropObject and not c.is_dragging and c.modulate != Color.BLACK)
     
-    var cards: Array[DragDropObject]
+    var cards: Array[DragDropObject] = []
     cards.append_array(areas)
 
     return cards

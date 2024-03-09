@@ -1,11 +1,13 @@
 [gd_scene load_steps=5 format=3 uid="uid://c475cacqkbqi"]
 
+[ext_resource type="Script" path="res://ui/login_screen.gd" id="1_udycr"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://ui/lobby_ui.tscn" id="1_v1mw5"]
-[ext_resource type="PackedScene" uid="uid://0is158vlvnit" path="res://ui/control_bar.tscn" id="2_8wfmf"]
 [ext_resource type="Texture2D" uid="uid://cs7fusy316jwn" path="res://assets/texture_09.png" id="2_a5gaw"]
 [ext_resource type="Script" path="res://dragdrop_w_getter/camera_controller.gd" id="7_xeqe8"]
 
-[node name="DragDropServerPanel" type="Node2D"]
+[node name="DragDropServerPanel" type="Node2D" node_paths=PackedStringArray("lobby_ui")]
+script = ExtResource("1_udycr")
+lobby_ui = NodePath("CanvasLayer/LobbyUI")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -1
@@ -16,22 +18,16 @@ region_enabled = true
 region_rect = Rect2(0, 0, 102400, 102400)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn", "res://panel item/play_card.tscn")
+_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
 spawn_path = NodePath("..")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("label")]
+z_index = -1
+ignore_rotation = false
+script = ExtResource("7_xeqe8")
+label = NodePath("../CanvasLayer/Label")
 
-[node name="ControlBar" parent="CanvasLayer" instance=ExtResource("2_8wfmf")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1152.0
-offset_bottom = 648.0
-grow_horizontal = 1
-grow_vertical = 1
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="LobbyUI" parent="CanvasLayer" instance=ExtResource("1_v1mw5")]
 
@@ -43,9 +39,3 @@ anchor_bottom = 1.0
 offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
-
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("label")]
-z_index = -1
-ignore_rotation = false
-script = ExtResource("7_xeqe8")
-label = NodePath("../CanvasLayer/Label")

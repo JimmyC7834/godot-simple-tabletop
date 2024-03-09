@@ -39,3 +39,5 @@ func update_label():
 func rotate_camera_to(d: int):
     var t = create_tween().set_ease(Tween.EASE_OUT)
     t.tween_property(self, "rotation", deg_to_rad(d), rotate_span)
+
+# [ext_resource type="Script" path="res://ui/login_screen.gd" id="1_km8ey"]

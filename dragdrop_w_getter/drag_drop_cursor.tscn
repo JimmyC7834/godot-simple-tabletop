@@ -25,10 +25,10 @@ replication_config = SubResource("SceneReplicationConfig_mcwr0")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("SegmentShape2D_p10yx")
 
-[node name="PopupMenu" type="PopupMenu" parent="."]
+[node name="CardMenu" type="PopupMenu" parent="."]
 size = Vector2i(100, 62)
 always_on_top = true
-item_count = 6
+item_count = 5
 item_0/text = "filp"
 item_0/id = 0
 item_1/text = "private"
@@ -40,5 +40,14 @@ item_3/text = "gather"
 item_3/id = 3
 item_4/text = "shuffle"
 item_4/id = 4
-item_5/text = "spawn deck"
-item_5/id = 5
+
+[node name="PanelMenu" type="PopupMenu" parent="."]
+size = Vector2i(100, 62)
+always_on_top = true
+item_count = 3
+item_0/text = "spawn card"
+item_0/id = 0
+item_1/text = "spawn object"
+item_1/id = 1
+item_2/text = "spawn deck"
+item_2/id = 2

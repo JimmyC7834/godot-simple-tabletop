@@ -1,6 +1,6 @@
 extends Node
 
-
+const PANEL_OBJECT = preload("res://panel item/panel_object.tscn")
 const PLAY_CARD = preload("res://panel item/play_card.tscn")
 const DEFAULT_OBJECT_WIDTH = 200
 
@@ -10,6 +10,19 @@ var cards: Array[DragDropObject]
 @rpc("any_peer", "call_local", "reliable")
 func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
+    var texture: Texture2D = Utils.get_texture_by_path(path)
+    if texture is Texture2D:
+        print(get_multiplayer_authority(), " added card: ", path)
+        inst.texture = texture
+        inst.global_position = pos
+        add_child(inst)
+        return inst
+
+    return null
+
+@rpc("any_peer", "call_local", "reliable")
+func new_object(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
+    var inst = PANEL_OBJECT.instantiate()
     var texture = Database.load_file(path)
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card: ", path)

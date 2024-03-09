@@ -20,9 +20,19 @@ func _ready():
     file_dialog.size = Vector2(400, 600)
     add_child(file_dialog)
 
-func choose_path(file_mode: FileDialog.FileMode):
+func choose_path(file_mode: FileDialog.FileMode, filter: Array[String] = [".tres"]) -> String:
+    file_dialog.file_mode = file_mode
+    file_dialog.filters = filter
     file_dialog.popup_centered()
-    return await file_dialog.files_selected
+    var path: String = ""
+    match file_mode:
+        FileDialog.FILE_MODE_OPEN_FILE:
+            path = await file_dialog.file_selected
+        FileDialog.FILE_MODE_OPEN_FILES:
+            path = await file_dialog.files_selected
+    
+    print("path: ", path)
+    return path
 
 func save_file(res: Resource, path: String, file_name: String = ""):
     ResourceSaver.save(res, path + file_name)

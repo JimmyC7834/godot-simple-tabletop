@@ -8,4 +8,5 @@ func get_texture_by_path(path: String) -> Texture:
     var error = img.load(path)
     if error:
         print("client missing texture: ", path)
+        return null
     return ImageTexture.create_from_image(img)
