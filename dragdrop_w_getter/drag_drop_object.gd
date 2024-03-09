@@ -9,6 +9,7 @@ extends Area2D
 @export var can_drag: bool = true
 @export var can_be_dropped: bool = true
 @export var can_click: bool = true
+@export var is_private: bool = false
 
 var front: Sprite2D
 
@@ -82,8 +83,9 @@ func push_to_front():
     DragDropServer.push_to_front(self)
 
 func flip():
-    _flip.rpc()
-    on_flipped.emit()
+    if !is_private:
+        _flip.rpc()
+        on_flipped.emit()
 
 @rpc("any_peer", "call_local", "reliable")
 func _flip():
@@ -128,3 +130,12 @@ func _delete():
 @rpc("authority", "call_local", "reliable")
 func _delete_client():
     queue_free()
+
+func set_private_value(value: bool):
+    is_private = value    
+    _set_private_value.rpc(value)
+
+@rpc("any_peer", "call_remote", "reliable")
+func _set_private_value(value: bool):
+    is_private = value
+    visible = !is_private

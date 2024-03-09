@@ -18,7 +18,8 @@ var original_position: Vector2
 
 var menu_func_table = {
     0: context_menu_flip,
-    1: context_menu_delete,
+    1: context_menu_private,
+    2: context_menu_delete,
 }
 
 # state machine
@@ -34,7 +35,7 @@ func _ready():
     
     current_state = state_empty
     
-    context_menu.id_pressed.connect(func(id: int): menu_func_table[id].call())
+    context_menu.id_pressed.connect(handle_context_menu)
 
 func _input(event):
     if not is_multiplayer_authority():
@@ -49,6 +50,7 @@ func _input(event):
             if not hovering in selecting:
                 selecting.append(hovering)
 
+            context_menu.set_item_checked(1, selecting[0].is_private)
             context_menu.popup_on_parent(
                 Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
 
@@ -153,10 +155,11 @@ func state_single_clicked(event):
             selecting[0].start_dragging()
             current_state = state_single_drag
     
-    if event is InputEventMouseButton and Input.is_action_just_released("LMB"):
-        # not dragged, do click
-        selecting[0].click()
-        current_state = state_empty     
+    if event is InputEventMouseButton:
+        if Input.is_action_just_released("LMB"):
+            # not dragged, do click
+            selecting[0].click()
+            current_state = state_empty
 
 func state_single_drag(event):
     if event is InputEventMouseMotion:
@@ -213,17 +216,28 @@ func state_selected_drag(event):
 
 ############################ CONTEXT MENU ############################
 
-func context_menu_flip():
+func handle_context_menu(id: int):
+    if id in menu_func_table:
+        menu_func_table[id].call(id)
+
+func context_menu_flip(id: int):
     if selected_any():
         selecting.map(func(c): c.flip())
         selecting = []
-        current_state = state_empty        
+        current_state = state_empty    
 
-func context_menu_delete():
+func context_menu_private(id: int):
+    context_menu.set_item_checked(id, !context_menu.is_item_checked(id))
+    if selected_any():
+        selecting.map(func(c): c.set_private_value(context_menu.is_item_checked(id)))
+        selecting = []
+        current_state = state_empty
+
+func context_menu_delete(id: int):
     if selected_any():
         selecting.map(func(c): c.delete())
         selecting = []
-        current_state = state_empty        
+        current_state = state_empty
 
 ########################  HELPER FUNC  ############################
 
@@ -249,7 +263,7 @@ func set_default_cursor_shape():
 
 func get_all_dragdrop_objects() -> Array[DragDropObject]:
     var areas: Array[Area2D] = get_overlapping_areas().filter(
-        func(c): return c is DragDropObject and not c.is_dragging)
+        func(c): return c is DragDropObject and not c.is_dragging and c.visible)
     
     var cards: Array[DragDropObject]
     cards.append_array(areas)
@@ -258,7 +272,7 @@ func get_all_dragdrop_objects() -> Array[DragDropObject]:
 
 func choose_dragdrop_object() -> DragDropObject:
     var cards: Array[Area2D] = get_overlapping_areas().filter(
-        func(c): return c is DragDropObject and not c.is_dragging)
+        func(c): return c is DragDropObject and not c.is_dragging and c.visible)
         
     if len(cards) == 0:
         return null
