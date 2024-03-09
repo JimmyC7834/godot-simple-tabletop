@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dea0ynlmnxn45"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/dragdrop_cursor.gd" id="1_aqae7"]
-[ext_resource type="Texture2D" uid="uid://cyjlofoiad46u" path="res://icon.svg" id="1_k134n"]
+[ext_resource type="Texture2D" uid="uid://devd657f8bf0l" path="res://icon.svg" id="1_k134n"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mcwr0"]
 properties/0/path = NodePath(".:position")
@@ -15,6 +15,7 @@ b = Vector2(0, 1)
 script = ExtResource("1_aqae7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.592157)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_k134n")
 
@@ -23,3 +24,11 @@ replication_config = SubResource("SceneReplicationConfig_mcwr0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("SegmentShape2D_p10yx")
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(100, 62)
+item_count = 2
+item_0/text = "filp"
+item_0/id = 0
+item_1/text = "delete"
+item_1/id = 1

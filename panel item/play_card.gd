@@ -1,10 +1,10 @@
 class_name PlayCard
 extends ServerCard
 
-#@onready var multiplayer_synchronizer = $MultiplayerSynchronizer
+@onready var multiplayer_synchronizer = $MultiplayerSynchronizer
 
 #func _ready():
-    #multiplayer_synchronizer.add_visibility_filter(personal_view_filter)    
+    #multiplayer_synchronizer.set_visibility_for(multiplayer.get_unique_id(), true)
 #
 #func set_personal_view(value: bool):
     #_set_personal_view.rpc(value)

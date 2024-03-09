@@ -39,7 +39,8 @@ func register_cards():
 
 func register_card(c: Node2D):
     if c is DragDropObject:
-        c.on_hovered.connect(process_all_card)
+        #c.on_cursor_exited.connect(process_all_card)
+        c.on_cursor_hovered.connect(process_all_card)
         #c.mouse_exited.connect(process_all_card)
         #c.on_dropped.connect(func(_x): process_all_card())
 

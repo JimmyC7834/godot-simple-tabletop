@@ -21,7 +21,8 @@ signal on_dragged
 signal on_dropped
 signal on_dropped_on(d: DragDropObject)
 signal on_flipped
-signal on_hovered
+signal on_cursor_hovered
+signal on_cursor_exited
 
 func _init(_width: int = DragDropServer.DEFAULT_OBJECT_WIDTH):
     width = _width
@@ -105,11 +106,13 @@ func _rotate_object(d: int):
 func check_hovered(area: Area2D):
     if area is DragDropCursor:
         _set_is_hovering.rpc(true)
-        on_hovered.emit()
+        on_cursor_hovered.emit()
 
 func check_unhovered(area: Area2D):
     if area is DragDropCursor:
         _set_is_hovering.rpc(false)
+        on_cursor_exited.emit()
+        
 
 @rpc("any_peer", "call_local", "reliable")
 func _set_is_hovering(value: bool):
