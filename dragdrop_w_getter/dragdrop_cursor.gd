@@ -3,6 +3,7 @@ extends Area2D
 
 const DRAG_THRESHOLD: int = 5
 const CONTEXT_MENU_OFFSET: Vector2 = Vector2(3, 3)
+const DEFAULT_CURSOR_SIZE: Vector2 = Vector2(0.1, 0.1)
 
 const CM_FLIP = 0
 const CM_PRIVATE = 1
@@ -17,6 +18,7 @@ const PM_SPAWN_DECK = 2
 @onready var panel_menu: PopupMenu = $PanelMenu
 @onready var card_menu: PopupMenu = $CardMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var sprite: Sprite2D = $Sprite2D
 
 # card control variable
 var selecting: Array[DragDropObject] = []
@@ -51,6 +53,12 @@ func _ready():
     cursor_shape = RectangleShape2D.new()
     collision_shape.shape = cursor_shape
     set_default_cursor_shape()
+    
+    sprite.self_modulate = Color(
+        0.4 + randf_range(0, 0.6), 
+        0.4 + randf_range(0, 0.6),
+        0.4 + randf_range(0, 0.6), 
+        0.3)
     
     current_state = state_empty
     
@@ -144,6 +152,8 @@ func state_dragging(event):
             offset.y *= -1
             
         collision_shape.global_position = original_position + offset
+        sprite.global_position = original_position + offset
+        sprite.scale = abs(global_position - original_position) / sprite.texture.get_size()
     elif event is InputEventMouseButton:
         # select the cards
         if Input.is_action_just_released("LMB"):
@@ -348,6 +358,9 @@ func rotate_selected(d_degree: int):
 func set_default_cursor_shape():
     cursor_shape.size = Vector2.ONE
     collision_shape.global_position = global_position
+    
+    sprite.global_position = global_position
+    sprite.scale = DEFAULT_CURSOR_SIZE
 
 func get_all_dragdrop_objects() -> Array[DragDropObject]:
     var areas: Array[Area2D] = get_overlapping_areas().filter(

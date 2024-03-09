@@ -7,6 +7,15 @@
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("Sprite2D:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Sprite2D:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("Sprite2D:self_modulate")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_p10yx"]
 b = Vector2(0, 1)
@@ -15,7 +24,7 @@ b = Vector2(0, 1)
 script = ExtResource("1_aqae7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-self_modulate = Color(0.74902, 0.945098, 1, 0.592157)
+self_modulate = Color(0.713726, 0.956863, 0.996078, 0.313726)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_6bw5h")
 
