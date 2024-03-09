@@ -4,6 +4,12 @@ extends Area2D
 const DRAG_THRESHOLD: int = 5
 const CONTEXT_MENU_OFFSET: Vector2 = Vector2(580, 325)
 
+const CM_FLIP = 0
+const CM_PRIVATE = 1
+const CM_DELETE = 2
+const CM_GATHER = 3
+const CM_SHUFFLE = 4
+
 @onready var context_menu: PopupMenu = $PopupMenu
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
@@ -17,9 +23,11 @@ var is_dragging: bool = false
 var original_position: Vector2
 
 var menu_func_table = {
-    0: context_menu_flip,
-    1: context_menu_private,
-    2: context_menu_delete,
+    CM_FLIP: context_menu_flip,
+    CM_PRIVATE: context_menu_private,
+    CM_DELETE: context_menu_delete,
+    CM_GATHER: context_menu_gather,
+    CM_SHUFFLE: context_menu_shuffle,
 }
 
 # state machine
@@ -45,14 +53,8 @@ func _input(event):
     current_state.call(event)
 
     if Input.is_action_just_pressed("RMB"):
-        if hovering != null:
-            # context menu
-            if not hovering in selecting:
-                selecting.append(hovering)
-
-            context_menu.set_item_checked(1, selecting[0].is_private)
-            context_menu.popup_on_parent(
-                Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
+        # context menu
+        open_context_menu()
 
     #if hovering != null:
         #if Input.is_action_just_pressed("LMB") and !selected_any():
@@ -216,6 +218,28 @@ func state_selected_drag(event):
 
 ############################ CONTEXT MENU ############################
 
+func open_context_menu():
+    if hovering == null:
+        context_menu.set_item_disabled(CM_FLIP, true)
+        context_menu.set_item_disabled(CM_PRIVATE, true)
+        context_menu.set_item_disabled(CM_DELETE, true)
+        context_menu.set_item_disabled(CM_FLIP, true)
+        context_menu.set_item_disabled(CM_SHUFFLE, true)
+        
+    else:
+        context_menu.set_item_disabled(CM_FLIP, false)
+        context_menu.set_item_disabled(CM_PRIVATE, false)
+        context_menu.set_item_disabled(CM_DELETE, false)
+        context_menu.set_item_disabled(CM_FLIP, false)
+        context_menu.set_item_disabled(CM_SHUFFLE, false)
+        
+        if not hovering in selecting:
+            selecting.append(hovering)
+        context_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
+
+    context_menu.popup_on_parent(
+        Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
+
 func handle_context_menu(id: int):
     if id in menu_func_table:
         menu_func_table[id].call(id)
@@ -227,15 +251,31 @@ func context_menu_flip(id: int):
         current_state = state_empty    
 
 func context_menu_private(id: int):
-    context_menu.set_item_checked(id, !context_menu.is_item_checked(id))
+    context_menu.set_item_checked(CM_PRIVATE, !context_menu.is_item_checked(CM_PRIVATE))
     if selected_any():
-        selecting.map(func(c): c.set_private_value(context_menu.is_item_checked(id)))
+        selecting.map(func(c): c.set_private_value(context_menu.is_item_checked(CM_PRIVATE)))
         selecting = []
         current_state = state_empty
 
 func context_menu_delete(id: int):
     if selected_any():
         selecting.map(func(c): c.delete())
+        selecting = []
+        current_state = state_empty
+
+func context_menu_gather(id: int):
+    if selected_any():
+        selecting.map(func(c): c.move_to(selecting[0].global_position))
+        selecting = []
+        current_state = state_empty
+
+func context_menu_shuffle(id: int):
+    if selected_any():
+        while selecting.size() > 0:
+            var c = selecting.pick_random()
+            c.push_to_front()
+            selecting.erase(c)
+
         selecting = []
         current_state = state_empty
 
