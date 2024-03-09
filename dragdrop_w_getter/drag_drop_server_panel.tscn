@@ -43,7 +43,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 102400, 102400)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
+_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn", "res://panel item/play_card.tscn")
 spawn_path = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

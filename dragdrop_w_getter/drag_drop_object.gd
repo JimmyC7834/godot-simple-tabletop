@@ -111,9 +111,20 @@ func check_hovered(area: Area2D):
 func check_unhovered(area: Area2D):
     if area is DragDropCursor:
         _set_is_hovering.rpc(false)
-        on_cursor_exited.emit()
-        
+        on_cursor_exited.emit()  
 
 @rpc("any_peer", "call_local", "reliable")
 func _set_is_hovering(value: bool):
     is_hovering = value
+
+func delete():
+    _delete.rpc()
+
+@rpc("any_peer", "call_local", "reliable")
+func _delete():
+    if multiplayer.is_server():
+        _delete_client.rpc()
+
+@rpc("authority", "call_local", "reliable")
+func _delete_client():
+    queue_free()

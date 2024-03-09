@@ -16,6 +16,11 @@ var is_dragging: bool = false
 
 var original_position: Vector2
 
+var menu_func_table = {
+    0: context_menu_flip,
+    1: context_menu_delete,
+}
+
 # state machine
 var current_state: Callable
 
@@ -28,6 +33,8 @@ func _ready():
     set_default_cursor_shape()
     
     current_state = state_empty
+    
+    context_menu.id_pressed.connect(func(id: int): menu_func_table[id].call())
 
 func _input(event):
     if not is_multiplayer_authority():
@@ -37,8 +44,11 @@ func _input(event):
     current_state.call(event)
 
     if Input.is_action_just_pressed("RMB"):
-        if hovering != null or hovering in selecting:
+        if hovering != null:
             # context menu
+            if not hovering in selecting:
+                selecting.append(hovering)
+
             context_menu.popup_on_parent(
                 Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
 
@@ -159,6 +169,7 @@ func state_single_drag(event):
             hovering.dropped_by(selecting[0])
         selecting[0].end_dragging()
         print("drop ", selecting)
+        selecting = []
         current_state = state_empty
 
 # state where any number of objects is selected by cursor
@@ -199,6 +210,20 @@ func state_selected_drag(event):
                 selecting.map(func(c): hovering.dropped_by(c))
                 selecting = []
                 current_state = state_empty
+
+############################ CONTEXT MENU ############################
+
+func context_menu_flip():
+    if selected_any():
+        selecting.map(func(c): c.flip())
+        selecting = []
+        current_state = state_empty        
+
+func context_menu_delete():
+    if selected_any():
+        selecting.map(func(c): c.delete())
+        selecting = []
+        current_state = state_empty        
 
 ########################  HELPER FUNC  ############################
 
