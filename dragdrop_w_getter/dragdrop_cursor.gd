@@ -293,8 +293,10 @@ func context_menu_spawn_card():
         selecting = []
         current_state = state_empty
     
-    var path = await Database.choose_path(
+    var path = Database.choose_path(
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
+    if path == null: return    
+    
     var inst = DragDropServer.new_card(path)
     if inst != null:
         inst.move_to(global_position)
@@ -304,7 +306,10 @@ func context_menu_spawn_object():
         selecting = []
         current_state = state_empty
     
-    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var path = Database.choose_path(
+        FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
+    if path == null: return    
+
     var inst = DragDropServer.new_object(path)
     if inst != null:
         inst.move_to(global_position)
@@ -314,7 +319,9 @@ func context_menu_spawn_deck():
         selecting = []
         current_state = state_empty
     
-    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var path = Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    if path == null: return    
+
     var res = Database.load_file(path)
     if res is DeckRes:
         for key in res.cards_dict:

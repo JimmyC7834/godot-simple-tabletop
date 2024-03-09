@@ -5,3 +5,4 @@
 [node name="Hud" type="CanvasLayer"]
 
 [node name="ControlBar" parent="." instance=ExtResource("1_kkmw2")]
+visible = false

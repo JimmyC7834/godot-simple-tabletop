@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DeckRes" load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/Weiß_Schwarz_cardback.png" id="1_cu1gn"]
+[ext_resource type="Script" path="res://res_deck.gd" id="2_t1sjb"]
+
+[resource]
+script = ExtResource("2_t1sjb")
+cards_dict = {
+"res://assets/ccs_w66_001.png": 2,
+"res://assets/ccs_w66_001sp.png": 3,
+"res://assets/ccs_w66_002.png": 4
+}
+back_texture = ExtResource("1_cu1gn")

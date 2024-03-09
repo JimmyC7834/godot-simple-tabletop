@@ -50,12 +50,17 @@ func remove_one(path: String):
 
 func save_deck():
     var path = await Database.choose_path(FileDialog.FILE_MODE_SAVE_FILE)
-    print(path)
+    if path == null:
+        return
+
     if len(deck) > 0:
         Database.save_file(generate_deck(), path)
 
 func load_deck():
     var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    if path == null:
+        return
+        
     var res = Database.load_file(path)
     if res is DeckRes:
         deck = res.cards_dict

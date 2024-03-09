@@ -21,9 +21,9 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     return null
 
 @rpc("any_peer", "call_local", "reliable")
-func new_object(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
+func new_object(path: String, pos: Vector2 = Vector2.ZERO) -> DragDropObject:
     var inst = PANEL_OBJECT.instantiate()
-    var texture = Database.load_file(path)
+    var texture: Texture2D = Utils.get_texture_by_path(path)
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card: ", path)
         inst.texture = texture
