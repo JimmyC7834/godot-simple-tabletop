@@ -322,7 +322,7 @@ func set_default_cursor_shape():
 
 func get_all_dragdrop_objects() -> Array[DragDropObject]:
     var areas: Array[Area2D] = get_overlapping_areas().filter(
-        func(c): return c is DragDropObject and not c.is_dragging and c.visible)
+        func(c): return c is DragDropObject and not c.is_dragging and c.modulate != Color.BLACK)
     
     var cards: Array[DragDropObject]
     cards.append_array(areas)
@@ -331,7 +331,7 @@ func get_all_dragdrop_objects() -> Array[DragDropObject]:
 
 func choose_dragdrop_object() -> DragDropObject:
     var cards: Array[Area2D] = get_overlapping_areas().filter(
-        func(c): return c is DragDropObject and not c.is_dragging and c.visible)
+        func(c): return c is DragDropObject and not c.is_dragging and c.modulate != Color.BLACK)
         
     if len(cards) == 0:
         return null

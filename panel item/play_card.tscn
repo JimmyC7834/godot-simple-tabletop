@@ -16,6 +16,7 @@ properties/2/replication_mode = 0
 
 [node name="Card" type="Area2D"]
 script = ExtResource("1_2e3a4")
+private_tint = Color(0.913725, 0.694118, 0.937255, 1)
 back_texture = ExtResource("2_dd1bi")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

@@ -83,9 +83,8 @@ func push_to_front():
     DragDropServer.push_to_front(self)
 
 func flip():
-    if !is_private:
-        _flip.rpc()
-        on_flipped.emit()
+    _flip.rpc()
+    on_flipped.emit()
 
 @rpc("any_peer", "call_local", "reliable")
 func _flip():
@@ -132,10 +131,11 @@ func _delete_client():
     queue_free()
 
 func set_private_value(value: bool):
-    is_private = value    
+    is_private = value
     _set_private_value.rpc(value)
 
 @rpc("any_peer", "call_remote", "reliable")
 func _set_private_value(value: bool):
     is_private = value
-    visible = !is_private
+    #visible = !is_private
+    modulate = Color.BLACK if value else Color.WHITE

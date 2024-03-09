@@ -1,17 +1,20 @@
 class_name PlayCard
 extends ServerCard
 
-@onready var multiplayer_synchronizer = $MultiplayerSynchronizer
+const SQUARE = preload("res://assets/square.png")
 
-#func _ready():
-    #multiplayer_synchronizer.set_visibility_for(multiplayer.get_unique_id(), true)
-#
-#func set_personal_view(value: bool):
-    #_set_personal_view.rpc(value)
-#
-#@rpc("any_peer", "call_local", "reliable")
-#func _set_personal_view(value: bool):
-    #multiplayer_synchronizer.public_visibility = value
-#
-#func personal_view_filter(id: int):
-    #return id == name.to_int()
+@export var private_tint: Color
+#var private_indicator
+
+func _ready():
+    super._ready()
+    #private_indicator = Sprite2D.new()
+    #add_child(private_indicator)
+    #private_indicator.texture = back_texture
+    #private_indicator.scale = Vector2.ONE * (float(width) / back_texture.get_width())
+    #private_indicator.visible = false
+    #private_indicator.self_modulate
+
+func set_private_value(value: bool):
+    modulate = private_tint if value else Color.WHITE
+    super.set_private_value(value)

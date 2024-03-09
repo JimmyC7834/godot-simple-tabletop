@@ -107,18 +107,60 @@ tween_duration = 0.2
 
 [node name="Card" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
 
 [node name="Card2" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
 
 [node name="Card3" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
 
 [node name="Card4" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
 
 [node name="Card5" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
 
 [node name="Card6" parent="Camera2D/Hand/Hand" instance=ExtResource("5_1si5m")]
 texture = ExtResource("6_s6gkf")
+is_dragging = false
+is_hovering = false
+degree = 0
+can_drag = true
+can_be_dropped = true
+can_click = true
+is_private = false
