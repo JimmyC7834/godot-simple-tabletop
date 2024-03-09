@@ -17,7 +17,6 @@ func _ready():
     
     file_dialog = FileDialog.new()
     file_dialog.access = FileDialog.ACCESS_FILESYSTEM
-    #file_dialog.filters = ["*.tres"]
     file_dialog.use_native_dialog = true
     file_dialog.size = Vector2(400, 600)
     add_child(file_dialog)
@@ -29,8 +28,6 @@ func _ready():
     file_dialog.confirmed.connect(func(): file_dialog_end.emit(null))
 
 func choose_path(file_mode: FileDialog.FileMode, filter: Array[String] = ["*.tres"]):
-    # to work around the bug of native file dialog
-
     file_dialog.file_mode = file_mode
     file_dialog.filters = filter
     file_dialog.popup_centered()

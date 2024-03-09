@@ -2,7 +2,7 @@ class_name DragDropCursor
 extends Area2D
 
 const DRAG_THRESHOLD: int = 5
-const CONTEXT_MENU_OFFSET: Vector2 = Vector2(580, 325)
+const CONTEXT_MENU_OFFSET: Vector2 = Vector2(3, 3)
 
 const CM_FLIP = 0
 const CM_PRIVATE = 1
@@ -231,16 +231,17 @@ func state_selected_drag(event):
 ############################ CONTEXT MENU ############################
 
 func open_context_menu():
+    var pos = Vector2i(Utils.world_to_screen(global_position, DragDropServer.camera) + CONTEXT_MENU_OFFSET)
     if hovering == null:
         panel_menu.popup_on_parent(
-            Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
+            Rect2i(pos, Vector2.ONE))
     else:
         if not hovering in selecting:
             selecting.append(hovering)
         card_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
 
         card_menu.popup_on_parent(
-            Rect2i(get_global_mouse_position() + CONTEXT_MENU_OFFSET, Vector2.ONE))
+            Rect2i(pos, Vector2.ONE))
 
 func handle_card_menu(id: int):
     if id in card_menu_func_table:
