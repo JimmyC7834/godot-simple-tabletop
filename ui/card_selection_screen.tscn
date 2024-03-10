@@ -2,15 +2,17 @@
 
 [ext_resource type="Script" path="res://ui/card_selection_screen.gd" id="1_e41le"]
 
-[node name="CardSelection" type="Panel" node_paths=PackedStringArray("label", "card_display")]
+[node name="CardSelection" type="Panel" node_paths=PackedStringArray("item_list", "card_display", "sort_btn", "import_btn")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_e41le")
-label = NodePath("VBoxContainer/RichTextLabel")
+item_list = NodePath("VBoxContainer/ItemList")
 card_display = NodePath("TextureRect")
+sort_btn = NodePath("VBoxContainer/HBoxContainer/Sort")
+import_btn = NodePath("VBoxContainer/HBoxContainer/Import")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -23,25 +25,29 @@ grow_vertical = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Import" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Import"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Sort" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Sort"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+[node name="ItemList" type="ItemList" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-bbcode_enabled = true
+max_columns = 5
+icon_mode = 0
+fixed_icon_size = Vector2i(200, 200)
 
 [node name="TextureRect" type="TextureRect" parent="."]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2

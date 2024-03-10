@@ -326,7 +326,7 @@ func context_menu_spawn_card():
         selecting = []
         current_state = state_empty
     
-    var path = Database.choose_path(
+    var path = await Database.choose_path(
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
     
@@ -337,7 +337,7 @@ func context_menu_spawn_object():
         selecting = []
         current_state = state_empty
     
-    var path = Database.choose_path(
+    var path = await Database.choose_path(
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
 
@@ -348,7 +348,7 @@ func context_menu_spawn_deck():
         selecting = []
         current_state = state_empty
     
-    var path = Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
     if path == null: return    
 
     var res = Database.load_file(path)

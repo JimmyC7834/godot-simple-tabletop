@@ -18,9 +18,11 @@ func _ready():
     on_deck_changed.connect(update_deck_display)
     on_deck_changed.connect(func(): print(deck))
 
-func card_clicked(path: String):
-    if Input.is_action_just_released("LMB"):
+func card_clicked(path: String, mouse_idx: int):
+    if mouse_idx == MOUSE_BUTTON_LEFT:
         add_one(path)
+    elif mouse_idx == MOUSE_BUTTON_RIGHT:
+        remove_one(path)
 
 func update_deck_display():
     if len(deck) == 0:

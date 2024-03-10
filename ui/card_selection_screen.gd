@@ -5,18 +5,34 @@ const WS_SAKURA: CardCollectionRes = preload("res://res/ws_sakura.tres")
 const IMG_SCALE: float = 0.5
 const FOCUS_HOVER_SPAN: float = 1.0
 
-@export var label: RichTextLabel
+@export var item_list: ItemList
 @export var card_display: TextureRect
-var hovering: bool = false
+@export var sort_btn: Button
+@export var import_btn: Button
 
-signal on_card_clicked(texture: Texture2D)
+var hovering: bool = false
+var card_paths: Array[String] = []
+
+signal on_card_clicked(path: String, mouse_idx: int)
 
 func _ready():
-    load_cards(WS_SAKURA.cards)
+    item_list.item_clicked.connect(func(id: int, _pos, mouse_idx: int):
+        on_card_clicked.emit(card_paths[id], mouse_idx))
+
+    import_btn.pressed.connect(func():
+        var paths = await Database.choose_path(
+            FileDialog.FILE_MODE_OPEN_FILES, ["*.png, *.jpg, *.jpeg"])
+        print(paths)
+        if paths == null:
+            return
+        card_paths.append_array(Array(paths))
+        update_cards_display()
+        )
     
-    label.meta_clicked.connect(handle_card_click)
-    label.meta_hover_started.connect(hovering_card)
-    label.meta_hover_ended.connect(cancel_card_focus.unbind(1))
+    sort_btn.pressed.connect(func():
+        card_paths.sort()
+        update_cards_display()
+        )
 
 func hovering_card(path: String):
     hovering = true
@@ -32,16 +48,15 @@ func cancel_card_focus():
     hovering = false
     card_display.visible = false    
 
-func load_cards(textures: Array[Texture2D]):
-    if len(textures) == 0: return
+func update_cards_display():
+    item_list.clear()
+    item_list.fixed_icon_size = ((item_list.size.x / item_list.max_columns)) * Vector2.ONE
+    if len(card_paths) == 0: return
     
-    var img_size = textures[0].get_size() * IMG_SCALE
-    var img_size_text = "%dx%d" % [img_size.x, img_size.y]
-    label.text = ""
-    for t in textures:
-        var p = t.resource_path
-        label.text += "[url=%s][img=%s]%s[/img][/url]" % [p, img_size_text, p]
+    var img_size = Utils.get_texture_by_path(card_paths[0]).get_size() * IMG_SCALE
 
-func handle_card_click(meta):
-    print("selected ", meta)
-    on_card_clicked.emit(meta)
+    var i = 0
+    for p in card_paths:
+        var t: Texture2D = Utils.get_texture_by_path(p)
+        item_list.add_icon_item(t)
+        i += 1

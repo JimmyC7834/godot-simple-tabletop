@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x22r2")
 card_selection = NodePath("VBoxContainer/HBoxContainer/CardSelection")
-deck_display = NodePath("VBoxContainer/HBoxContainer/DeckDisplay")
+deck_display = NodePath("")
 save_btn = NodePath("VBoxContainer/Panel/MenuBar/Save Deck")
 load_btn = NodePath("VBoxContainer/Panel/MenuBar/Load Deck")
 
@@ -53,9 +53,12 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DeckDisplay" type="RichTextLabel" parent="VBoxContainer/HBoxContainer"]
+[node name="CardSelection2" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("item_list", "card_display", "sort_btn", "import_btn") instance=ExtResource("2_udvbr")]
 layout_mode = 2
 size_flags_horizontal = 3
-bbcode_enabled = true
+item_list = NodePath("../CardSelection/VBoxContainer/ItemList")
+card_display = NodePath("../CardSelection/TextureRect")
+sort_btn = NodePath("../CardSelection/VBoxContainer/HBoxContainer/Sort")
+import_btn = NodePath("../CardSelection/VBoxContainer/HBoxContainer/Import")
 
 [node name="FileDialog" type="FileDialog" parent="."]

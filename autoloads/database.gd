@@ -22,7 +22,7 @@ func _ready():
     add_child(file_dialog)
     
     file_dialog.file_selected.connect(func(path): file_dialog_end.emit(path))
-    file_dialog.files_selected.connect(func(path): print(path))
+    file_dialog.files_selected.connect(func(path): file_dialog_end.emit(path))
     file_dialog.dir_selected.connect(func(path): print(path))
     file_dialog.canceled.connect(func(): file_dialog_end.emit(null))
     file_dialog.confirmed.connect(func(): file_dialog_end.emit(null))
@@ -32,10 +32,14 @@ func choose_path(file_mode: FileDialog.FileMode, filter: Array[String] = ["*.tre
     file_dialog.filters = filter
     file_dialog.popup_centered()
 
-    var path = file_dialog.current_file
+    var path
+    if file_mode == FileDialog.FILE_MODE_OPEN_FILES:
+        path = await file_dialog_end
+    else:
+        path = file_dialog.current_file
     
     print("path: ", path)
-    return null if path == "" else path
+    return null if path is String and path == "" else path
 
 func save_file(res: Resource, path: String, file_name: String = ""):
     ResourceSaver.save(res, path + file_name)
