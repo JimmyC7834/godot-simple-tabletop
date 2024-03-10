@@ -7,8 +7,12 @@ const DEFAULT_OBJECT_WIDTH = 200
 var camera: Camera2D
 var cards: Array[DragDropObject]
 
+func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
+    new_card_wtex.rpc(Utils.get_img_bytes_by_path(path), pos, count)
+
+# old new_card, read from path instead of sending texture
 @rpc("any_peer", "call_local", "reliable")
-func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
+func _new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
     var texture: Texture2D = Utils.get_texture_by_path(path)
     if texture is Texture2D:
@@ -21,43 +25,37 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     return null
 
 @rpc("any_peer", "call_local", "reliable")
-func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO) -> PlayCard:
-    var inst = PLAY_CARD.instantiate()
+func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
     var img = Image.new()
     img.load_png_from_buffer(color_arr)
     var texture = ImageTexture.create_from_image(img)
     if texture is Texture2D:
-        print(get_multiplayer_authority(), " added card_wtex: ", texture)
-        inst.texture = texture
-        add_child(inst)
-        inst.move_to(pos)
-        return inst
+        var arr: Array[PlayCard] = []
+        for i in range(count):
+            print(get_multiplayer_authority(), " added card_wtex: ", texture)
+            var inst = card_from_texture(texture)
+            inst.move_to(pos)
+            arr.append(inst)
+        return arr
 
     return null
+
+func card_from_texture(texture: Texture2D) -> PlayCard:
+    var inst = PLAY_CARD.instantiate()
+    inst.texture = texture
+    add_child(inst)
+    return inst
 
 @rpc("any_peer", "call_local", "reliable")
-func new_object(path: String, pos: Vector2 = Vector2.ZERO) -> DragDropObject:
-    var inst = PANEL_OBJECT.instantiate()
-    var texture: Texture2D = Utils.get_texture_by_path(path)
+func new_object(path: String, pos: Vector2 = Vector2.ZERO):
+    var img = Image.new()
+    img.load_png_from_buffer(Utils.get_img_bytes_by_path(path))
+    var texture = ImageTexture.create_from_image(img)
     if texture is Texture2D:
-        print(get_multiplayer_authority(), " added card: ", path)
+        print(get_multiplayer_authority(), " added card_wtex: ", texture)
+        var inst = PANEL_OBJECT.instantiate()
         inst.texture = texture
-        inst.global_position = pos
-        add_child(inst)
-        return inst
-
-    return null
-
-#@rpc("any_peer", "call_local", "reliable")
-#func new_card_pile(path: String) -> CardPile:
-    #var inst = CARD_PILE.instantiate()
-    #var res = Database.load_file(path)
-    #if res is DeckRes:
-        #inst.load_deck(res)
-        #add_child(inst)
-        #return inst
-#
-    #return null
+        inst.move_to(pos)
 
 func clear_all_card():
     for c in get_children():

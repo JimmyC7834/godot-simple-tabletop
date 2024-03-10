@@ -1,5 +1,7 @@
 extends Node
 
+const SQUARE_PATH = "res://assets/square.png"
+
 func delay(t: float):
     return get_tree().create_timer(t).timeout
 
@@ -12,15 +14,15 @@ func get_texture_by_path(path: String) -> Texture:
         return null
     return ImageTexture.create_from_image(img)
 
-func get_bytes_by_path(path: String) -> Texture:
+func get_img_bytes_by_path(path: String, compression: Image.CompressMode = Image.COMPRESS_ASTC) -> PackedByteArray:
     var img = Image.new()
     var error = img.load(path)
     print(img)
     if error != OK:
-        print("client missing texture: ", path)
-        return null
-    return ImageTexture.create_from_image(img)
-    
+        return get_img_bytes_by_path(SQUARE_PATH)
+    img.compress(compression)
+    return img.save_png_to_buffer()
+
 func screen_to_world(pos: Vector2, camera: Camera2D) -> Vector2:
     var v = camera.get_viewport().get_canvas_transform().affine_inverse()
     v *= pos

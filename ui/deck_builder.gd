@@ -73,6 +73,6 @@ func generate_deck() -> DeckRes:
     res.cards_dict = deck
     for key in deck:
         var img = Image.load_from_file(key)
-        img.compress(Image.COMPRESS_BPTC, Image.COMPRESS_SOURCE_GENERIC)
+        img.compress(Image.COMPRESS_ASTC, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
         res.card_textures[key] = img
     return res

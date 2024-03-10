@@ -10,5 +10,5 @@ func _ready():
         func():
             card_selection.show()
             var path = await card_selection.on_card_clicked
-            DragDropServer.new_card.rpc(path)
+            DragDropServer.new_card(path)
             card_selection.hide())
