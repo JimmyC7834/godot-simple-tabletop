@@ -11,6 +11,7 @@ const CM_PRIVATE = 1
 const CM_DELETE = 2
 const CM_GATHER = 3
 const CM_SHUFFLE = 4
+const CM_INFO = 5
 
 const PM_SPAWN_CARD = 0
 const PM_SPAWN_OBJECT = 1
@@ -22,7 +23,12 @@ const PM_SPAWN_DECK = 2
 @onready var sprite: Sprite2D = $Sprite2D
 
 # card control variable
-var selecting: Array[DragDropObject] = []
+var selecting: Array[DragDropObject] = []:
+    set(x):
+        selecting.map(func(c): c.set_outline(false))
+        selecting = x
+        selecting.map(func(c): c.set_outline(true))
+
 var hovering: DragDropObject
 
 var cursor_shape: RectangleShape2D
@@ -87,7 +93,6 @@ func _input(event):
             DragDropServer.camera.zoom_view(D_ZOOM)
         elif Input.is_action_just_pressed("SCROLL_DOWN"):
             DragDropServer.camera.zoom_view(-D_ZOOM)
-
 
     #if hovering != null:
         #if Input.is_action_just_pressed("LMB") and !selected_any():
@@ -263,6 +268,7 @@ func open_context_menu():
     else:
         if not hovering in selecting:
             selecting.append(hovering)
+        card_menu.set_item_text(CM_INFO, "%d cards" % get_all_dragdrop_objects().size())
         card_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
 
         card_menu.popup_on_parent(
