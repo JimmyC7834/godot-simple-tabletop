@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://c475cacqkbqi"]
+[gd_scene load_steps=7 format=3 uid="uid://c475cacqkbqi"]
 
 [ext_resource type="Script" path="res://ui/login_screen.gd" id="1_udycr"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://ui/lobby_ui.tscn" id="1_v1mw5"]
 [ext_resource type="Texture2D" uid="uid://cs7fusy316jwn" path="res://assets/texture_09.png" id="2_a5gaw"]
+[ext_resource type="PackedScene" uid="uid://dcuvux3l2ft65" path="res://ui/menubar.tscn" id="5_jrdmh"]
+[ext_resource type="PackedScene" uid="uid://e3wmm6gsk785" path="res://ui/deck_builder.tscn" id="5_x7ly4"]
 [ext_resource type="Script" path="res://dragdrop_w_getter/camera_controller.gd" id="7_xeqe8"]
 
-[node name="DragDropServerPanel" type="Node2D" node_paths=PackedStringArray("lobby_ui")]
+[node name="DragDropServerPanel" type="Node2D" node_paths=PackedStringArray("lobby_ui", "menubar", "deckbuilder")]
 script = ExtResource("1_udycr")
 lobby_ui = NodePath("CanvasLayer/LobbyUI")
+menubar = NodePath("CanvasLayer/MenuBar")
+deckbuilder = NodePath("CanvasLayer/Control")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -1
@@ -32,6 +36,12 @@ script = ExtResource("7_xeqe8")
 label = NodePath("../CanvasLayer/Label")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MenuBar" parent="CanvasLayer" instance=ExtResource("5_jrdmh")]
+visible = false
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource("5_x7ly4")]
+visible = false
 
 [node name="LobbyUI" parent="CanvasLayer" instance=ExtResource("1_v1mw5")]
 

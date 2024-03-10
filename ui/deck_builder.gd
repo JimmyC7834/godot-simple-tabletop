@@ -1,4 +1,4 @@
-extends Control
+extends Window
 
 var deck: Dictionary
 var card_textures: Dictionary
@@ -20,11 +20,12 @@ func _ready():
     
     deck_display.item_clicked.connect(
         func(id: int, _pos, mouse_idx: int):
-            card_clicked(deck.keys()[id], mouse_idx)
-    )
+            card_clicked(deck.keys()[id], mouse_idx))
     
     on_deck_changed.connect(update_deck_display)
     on_deck_changed.connect(func(): print(deck))
+    
+    close_requested.connect(hide)
 
 func card_clicked(path: String, mouse_idx: int):
     if mouse_idx == MOUSE_BUTTON_LEFT:
