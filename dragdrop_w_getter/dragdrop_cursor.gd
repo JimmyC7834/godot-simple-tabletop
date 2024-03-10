@@ -315,6 +315,7 @@ func context_menu_shuffle():
         while selecting.size() > 0:
             var c = selecting.pick_random()
             c.push_to_front()
+            c.set_outline(false)
             selecting.erase(c)
     
     selecting = []
