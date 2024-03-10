@@ -7,6 +7,7 @@ var card_textures: Dictionary
 @export var deck_display: ItemList
 @export var save_btn: Button
 @export var load_btn: Button
+@export var label: Label
 
 signal on_deck_changed
 
@@ -37,10 +38,14 @@ func update_deck_display():
     deck_display.fixed_icon_size = ((deck_display.size.x / deck_display.max_columns) - 25) * Vector2.ONE
     deck_display.clear()
     var i = 0
+    var count = 0
     for key in deck:
         deck_display.add_icon_item(Utils.get_texture_by_path(key))
         deck_display.set_item_text(i, str(deck[key]))
+        count += deck[key]
         i += 1
+
+    label.text = "Deck Card Count: %d" % count
 
 func add_one(path: String):
     if !deck.has(path):

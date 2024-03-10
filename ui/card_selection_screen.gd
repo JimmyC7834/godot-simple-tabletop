@@ -1,8 +1,6 @@
 class_name CardSelectionScreen
 extends Panel
 
-const WS_SAKURA: CardCollectionRes = preload("res://res/ws_sakura.tres")
-
 const IMG_SCALE: float = 0.5
 const FOCUS_HOVER_SPAN: float = 1.0
 
