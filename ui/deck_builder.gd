@@ -3,18 +3,26 @@ extends Control
 var deck: Dictionary
 var card_textures: Dictionary
 
-@export var card_selection: Control
-@export var deck_display: RichTextLabel
+@export var card_selection: CardSelectionScreen
+@export var deck_display: ItemList
 @export var save_btn: Button
 @export var load_btn: Button
 
 signal on_deck_changed
 
 func _ready():
+    deck_display.icon_mode = ItemList.ICON_MODE_TOP    
+    
     save_btn.pressed.connect(save_deck)
     load_btn.pressed.connect(load_deck)
+    
     card_selection.on_card_clicked.connect(card_clicked)
-    deck_display.meta_clicked.connect(remove_one)
+    
+    deck_display.item_clicked.connect(
+        func(id: int, _pos, mouse_idx: int):
+            card_clicked(deck.keys()[id], mouse_idx)
+    )
+    
     on_deck_changed.connect(update_deck_display)
     on_deck_changed.connect(func(): print(deck))
 
@@ -25,15 +33,13 @@ func card_clicked(path: String, mouse_idx: int):
         remove_one(path)
 
 func update_deck_display():
-    if len(deck) == 0:
-        deck_display.text = ""
-        return
-    
-    var img_size = Utils.get_texture_by_path(deck.keys()[0]).get_size() * card_selection.IMG_SCALE
-    var img_size_text = "%dx%d" % [img_size.x, img_size.y]
-    deck_display.text = ""
-    for k in deck.keys():
-        deck_display.text += "[url=%s][img=%s]%s[/img][/url]x%d" % [k, img_size_text, k, deck[k]]
+    deck_display.fixed_icon_size = ((deck_display.size.x / deck_display.max_columns) - 25) * Vector2.ONE
+    deck_display.clear()
+    var i = 0
+    for key in deck:
+        deck_display.add_icon_item(Utils.get_texture_by_path(key))
+        deck_display.set_item_text(i, str(deck[key]))
+        i += 1
 
 func add_one(path: String):
     if !deck.has(path):
@@ -52,7 +58,7 @@ func remove_one(path: String):
     on_deck_changed.emit()
 
 func save_deck():
-    var path = await Database.choose_path(FileDialog.FILE_MODE_SAVE_FILE)
+    var path = Database.choose_path(FileDialog.FILE_MODE_SAVE_FILE)
     if path == null:
         return
 
@@ -60,7 +66,7 @@ func save_deck():
         Database.save_file(generate_deck(), path)
 
 func load_deck():
-    var path = await Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
+    var path = Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
     if path == null:
         return
         

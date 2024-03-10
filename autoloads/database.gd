@@ -6,6 +6,7 @@ const DECKS_PATH = "%s/decks/" % SAVE_PATH_ROOT
 const TEXTURE_PATH = "%s/textures/" % SAVE_PATH_ROOT
 
 var file_dialog: FileDialog
+var paths
 
 signal file_dialog_end(path)
 
@@ -22,7 +23,7 @@ func _ready():
     add_child(file_dialog)
     
     file_dialog.file_selected.connect(func(path): file_dialog_end.emit(path))
-    file_dialog.files_selected.connect(func(path): file_dialog_end.emit(path))
+    file_dialog.files_selected.connect(func(path): paths = path)
     file_dialog.dir_selected.connect(func(path): print(path))
     file_dialog.canceled.connect(func(): file_dialog_end.emit(null))
     file_dialog.confirmed.connect(func(): file_dialog_end.emit(null))
@@ -34,7 +35,7 @@ func choose_path(file_mode: FileDialog.FileMode, filter: Array[String] = ["*.tre
 
     var path
     if file_mode == FileDialog.FILE_MODE_OPEN_FILES:
-        path = await file_dialog_end
+        path = paths
     else:
         path = file_dialog.current_file
     

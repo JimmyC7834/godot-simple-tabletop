@@ -1,3 +1,4 @@
+class_name CardSelectionScreen
 extends Panel
 
 const WS_SAKURA: CardCollectionRes = preload("res://res/ws_sakura.tres")
@@ -11,7 +12,7 @@ const FOCUS_HOVER_SPAN: float = 1.0
 @export var import_btn: Button
 
 var hovering: bool = false
-var card_paths: Array[String] = []
+var card_paths: Array = []
 
 signal on_card_clicked(path: String, mouse_idx: int)
 
@@ -20,7 +21,7 @@ func _ready():
         on_card_clicked.emit(card_paths[id], mouse_idx))
 
     import_btn.pressed.connect(func():
-        var paths = await Database.choose_path(
+        var paths = Database.choose_path(
             FileDialog.FILE_MODE_OPEN_FILES, ["*.png, *.jpg, *.jpeg"])
         print(paths)
         if paths == null:
@@ -46,9 +47,15 @@ func hovering_card(path: String):
 func cancel_card_focus():
     print("cancel focus ")
     hovering = false
-    card_display.visible = false    
+    card_display.visible = false 
 
 func update_cards_display():
+    var uni: Array = []
+    for a in card_paths:
+        if not a in uni:
+            uni.append(a)
+    card_paths = uni
+    
     item_list.clear()
     item_list.fixed_icon_size = ((item_list.size.x / item_list.max_columns)) * Vector2.ONE
     if len(card_paths) == 0: return
