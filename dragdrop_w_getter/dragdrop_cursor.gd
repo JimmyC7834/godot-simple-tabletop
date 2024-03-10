@@ -1,6 +1,7 @@
 class_name DragDropCursor
 extends Area2D
 
+const D_ZOOM: float = 0.02
 const DRAG_THRESHOLD: int = 5
 const CONTEXT_MENU_OFFSET: Vector2 = Vector2(3, 3)
 const DEFAULT_CURSOR_SIZE: Vector2 = Vector2(0.1, 0.1)
@@ -75,6 +76,18 @@ func _input(event):
     if Input.is_action_just_pressed("RMB"):
         # context menu
         open_context_menu()
+    
+    if selected_any() and hovering in selecting:
+        if Input.is_action_just_released("SCROLL_UP"):
+            loop_selecting_cards(true)
+        elif Input.is_action_just_released("SCROLL_DOWN"):
+            loop_selecting_cards(false)
+    else:
+        if Input.is_action_just_pressed("SCROLL_UP"):
+            DragDropServer.camera.zoom_view(D_ZOOM)
+        elif Input.is_action_just_pressed("SCROLL_DOWN"):
+            DragDropServer.camera.zoom_view(-D_ZOOM)
+
 
     #if hovering != null:
         #if Input.is_action_just_pressed("LMB") and !selected_any():
@@ -159,6 +172,8 @@ func state_dragging(event):
         if Input.is_action_just_released("LMB"):
             # dragged selection area, get all objects covered
             selecting = get_all_dragdrop_objects()
+            selecting.sort_custom(func(a, b): return a.get_index() < b.get_index())
+            selecting.map(func(c): c.push_to_front())
             print("selected ", selecting)
             set_default_cursor_shape()
             if selected_any():
@@ -338,6 +353,15 @@ func context_menu_spawn_deck():
                 global_position, res.cards_dict[key])
 
 ########################  HELPER FUNC  ############################
+
+func loop_selecting_cards(forward: bool):
+    if forward:
+        var f = selecting.pop_front()
+        selecting.append(f)
+    else:
+        selecting.push_front(selecting.pop_back())
+
+    selecting[0].push_to_front()
 
 func rotation_action_check():
     if selected_any():

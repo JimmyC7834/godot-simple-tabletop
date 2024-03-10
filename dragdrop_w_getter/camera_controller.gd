@@ -1,6 +1,5 @@
 extends Camera2D
 
-const D_ZOOM: float = 0.01
 const ZOOM_MIN: float = .25
 
 @export var label: Label
@@ -16,13 +15,6 @@ func _input(event):
         if Input.is_action_pressed("CAMERA_DRAG"):
             global_position -= event.relative.rotated(deg_to_rad(degree)) * (1.0 / zoom.x)
     
-    if Input.is_action_just_pressed("SCROLL_UP"):
-        zoom += Vector2.ONE * D_ZOOM
-        zoom = max(ZOOM_MIN, zoom.x) * Vector2.ONE
-    elif Input.is_action_just_pressed("SCROLL_DOWN"):
-        zoom -= Vector2.ONE * D_ZOOM
-        zoom = max(ZOOM_MIN, zoom.x) * Vector2.ONE
-
     if Input.is_action_pressed("CAMERA_DRAG"):
         if Input.is_action_just_pressed("ROTATE_LEFT"):
             degree -= 45
@@ -32,6 +24,10 @@ func _input(event):
             rotate_camera_to(degree)
     
     update_label()
+
+func zoom_view(d_zoom: float):
+    zoom += Vector2.ONE * d_zoom
+    zoom = max(ZOOM_MIN, zoom.x) * Vector2.ONE
 
 func update_label():
     label.text = "POSITION: %s, ROTATION: %d" % [global_position, degree]
