@@ -308,7 +308,7 @@ func context_menu_spawn_card():
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
     
-    DragDropServer.new_card(path, global_position)
+    DragDropServer.new_card.rpc(path, global_position)
 
 func context_menu_spawn_object():
     if selected_any():
@@ -319,7 +319,7 @@ func context_menu_spawn_object():
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
 
-    DragDropServer.new_object(path, global_position)
+    DragDropServer.new_object.rpc(path, global_position)
 
 func context_menu_spawn_deck():
     if selected_any():
@@ -334,8 +334,8 @@ func context_menu_spawn_deck():
         for key in res.cards_dict:
             for i in range(res.cards_dict[key]):
                 res.card_textures[key].decompress()
-                DragDropServer.new_card_wtex(
-                    ImageTexture.create_from_image(res.card_textures[key]), global_position)
+                DragDropServer.new_card_wtex.rpc(
+                    res.card_textures[key].save_png_to_buffer(), global_position)
 
 ########################  HELPER FUNC  ############################
 

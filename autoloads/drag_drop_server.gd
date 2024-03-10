@@ -21,8 +21,11 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     return null
 
 @rpc("any_peer", "call_local", "reliable")
-func new_card_wtex(texture: Texture2D, pos: Vector2 = Vector2.ZERO) -> PlayCard:
+func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
+    var img = Image.new()
+    img.load_png_from_buffer(color_arr)
+    var texture = ImageTexture.create_from_image(img)
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card_wtex: ", texture)
         inst.texture = texture
