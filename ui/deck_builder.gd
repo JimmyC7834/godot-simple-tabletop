@@ -8,6 +8,7 @@ var card_textures: Dictionary
 @export var save_btn: Button
 @export var load_btn: Button
 @export var label: Label
+@export var compression_dropdown: OptionButton
 
 signal on_deck_changed
 
@@ -87,6 +88,8 @@ func generate_deck() -> DeckRes:
     res.cards_dict = deck
     for key in deck:
         var img = Image.load_from_file(key)
-        img.compress(Image.COMPRESS_ASTC, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
+        img.compress(
+            Image.COMPRESS_ASTC if compression_dropdown.selected == 0 else Image.COMPRESS_BPTC, 
+            Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
         res.card_textures[key] = img
     return res

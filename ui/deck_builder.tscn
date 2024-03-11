@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://s3lbv2yysqr1" path="res://ui/card_selection_screen.tscn" id="2_udvbr"]
 
 [node name="Control" type="Window" node_paths=PackedStringArray("card_selection", "deck_display", "save_btn", "load_btn", "label")]
-position = Vector2i(50, 50)
+position = Vector2i(100, 100)
 size = Vector2i(800, 600)
 min_size = Vector2i(800, 600)
 script = ExtResource("1_x22r2")
@@ -47,6 +47,15 @@ text = "Save Deck"
 [node name="Load Deck" type="Button" parent="VBoxContainer/Panel/MenuBar"]
 layout_mode = 2
 text = "Load Deck"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/Panel/MenuBar"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "ASTC8x8"
+popup/item_0/id = 0
+popup/item_1/text = "BPTC"
+popup/item_1/id = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
