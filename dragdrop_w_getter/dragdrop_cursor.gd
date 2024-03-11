@@ -79,10 +79,17 @@ func _input(event):
     hovering = choose_dragdrop_object()
     current_state.call(event)
 
-    if Input.is_action_just_pressed("RMB") and not Input.is_action_pressed("LMB"):
-        # context menu
-        open_context_menu()
-    
+    if not Input.is_action_pressed("LMB"):
+        if Input.is_action_just_pressed("RMB"):
+            # context menu
+            open_context_menu()
+        elif selected_any():
+            listen_for_shortcut()
+        elif hovering != null:
+            selecting.append(hovering)
+            listen_for_shortcut()            
+            selecting = []
+            
     if selected_any() and hovering in selecting:
         if Input.is_action_just_released("SCROLL_UP"):
             loop_selecting_cards(true)
@@ -319,6 +326,17 @@ func context_menu_spawn_deck():
                 global_position, res.cards_dict[key])
 
     Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+
+func listen_for_shortcut():
+    if Input.is_action_just_pressed("CM_FLIP"):
+        context_menu_flip()        
+    elif Input.is_action_just_pressed("CM_PRIVATE"):
+        card_menu.set_item_checked(CM_PRIVATE, selecting[0].is_private)
+        context_menu_private()        
+    elif Input.is_action_just_pressed("CM_GATHER"):
+        context_menu_gather()       
+    elif Input.is_action_just_pressed("CM_DELETE"):
+        context_menu_delete()
 
 ########################  HELPER FUNC  ############################
 
