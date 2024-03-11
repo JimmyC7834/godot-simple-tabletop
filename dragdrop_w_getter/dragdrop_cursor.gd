@@ -79,7 +79,7 @@ func _input(event):
     hovering = choose_dragdrop_object()
     current_state.call(event)
 
-    if Input.is_action_just_pressed("RMB"):
+    if Input.is_action_just_pressed("RMB") and not Input.is_action_pressed("LMB"):
         # context menu
         open_context_menu()
     
