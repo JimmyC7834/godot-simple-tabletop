@@ -1,6 +1,9 @@
 class_name DragDropObject
 extends Area2D
 
+const OUTLINE_WIDTH: float = 8
+const MAT_OUTLINE = preload("res://outline.tres")
+
 @export var texture: Texture2D
 
 @export var is_dragging: bool = false
@@ -11,6 +14,7 @@ extends Area2D
 @export var can_click: bool = true
 @export var is_private: bool = false
 
+var outline: Sprite2D
 var front: Sprite2D
 
 var rotate_span: float = 0.1
@@ -26,8 +30,8 @@ signal on_cursor_hovered
 signal on_cursor_exited
 
 func _init(_width: int = DragDropServer.DEFAULT_OBJECT_WIDTH):
-    width = _width
- 
+    width = _width 
+
 func _ready():
     front = Sprite2D.new()
     add_child(front)
@@ -39,8 +43,21 @@ func _ready():
     collision_shape.shape = RectangleShape2D.new()
     collision_shape.shape.size = texture.get_size() * front.scale   
     
+    outline = Sprite2D.new()
+    add_child(outline)
+    move_child(outline, 0)
+    outline.texture = texture
+    outline.scale = Vector2.ONE * (float(width) / texture.get_width())
+    
+    outline.material = MAT_OUTLINE.duplicate()
+    set_outline(false)
+    
     area_entered.connect(check_hovered)
     area_exited.connect(check_unhovered)
+
+func set_outline(value: bool):
+    (outline.material as ShaderMaterial).set_shader_parameter(
+        "width", OUTLINE_WIDTH if value else 0)
 
 func start_dragging():
     if can_drag:

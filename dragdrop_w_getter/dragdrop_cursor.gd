@@ -94,47 +94,6 @@ func _input(event):
         elif Input.is_action_just_pressed("SCROLL_DOWN"):
             DragDropServer.camera.zoom_view(-D_ZOOM)
 
-    #if hovering != null:
-        #if Input.is_action_just_pressed("LMB") and !selected_any():
-            #original_position = global_position
-            #selecting.append(hovering)
-            #selecting.map(func(c): c.start_dragging())
-        #elif Input.is_action_just_released("LMB") and !selected_any():
-            #hovering.push_to_front()
-            #hovering.click()
-        #elif Input.is_action_just_pressed("RMB") and !selected_any():
-            #hovering.flip()
-    #
-    #if selecting != null:
-        #if Input.is_action_just_pressed("ROTATE_LEFT"):
-            #selecting.map(func(c): c.move_to(global_position))
-            #selecting.map(func(c): c.rotate_object(-90))
-        #elif Input.is_action_just_pressed("ROTATE_RIGHT"):
-            #selecting.map(func(c): c.move_to(global_position))
-            #selecting.map(func(c): c.rotate_object(90))
-        #elif Input.is_action_just_pressed("RMB"):
-            #selecting.map(func(c): c.flip())
-        #
-        ## drop the card
-        #if Input.is_action_just_released("LMB"):
-            #if hovering != null:
-                #selecting.map(func(c): hovering.dropped_by(c))
-            #selecting.map(func(c): c.end_dragging())
-            #print(selecting, " dropped")
-            #selecting = []
-    #
-    #if event is InputEventMouseMotion:
-        #global_position = get_global_mouse_position()
-        #
-        #if !selected_any():
-            #if hovering != null and original_position.distance_to(global_position) > DRAG_THRESHOLD and Input.is_action_pressed("LMB"):
-                #print("picked ", hovering.name)
-                #hovering.start_dragging()
-                #hovering.push_to_front()
-                #selecting.append(hovering)
-        #else:
-            #selecting.map(func(c): c.drag(get_vec_in_cam(event.relative)))
-
 ############################# STATE MACHINE ##############################
 
 # idle state of the cursor
@@ -341,7 +300,7 @@ func context_menu_spawn_object():
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
 
-    DragDropServer.new_object.rpc(path, global_position)
+    DragDropServer.new_object(path, global_position)
 
 func context_menu_spawn_deck():
     if selected_any():

@@ -46,15 +46,19 @@ func card_from_texture(texture: Texture2D) -> PlayCard:
     add_child(inst)
     return inst
 
-@rpc("any_peer", "call_local", "reliable")
 func new_object(path: String, pos: Vector2 = Vector2.ZERO):
+    new_object_wtex.rpc(Utils.get_img_bytes_by_path(path), pos)
+
+@rpc("any_peer", "call_local", "reliable")
+func new_object_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO):
     var img = Image.new()
-    img.load_png_from_buffer(Utils.get_img_bytes_by_path(path))
+    img.load_png_from_buffer(color_arr)
     var texture = ImageTexture.create_from_image(img)
     if texture is Texture2D:
         print(get_multiplayer_authority(), " added card_wtex: ", texture)
         var inst = PANEL_OBJECT.instantiate()
         inst.texture = texture
+        add_child(inst)
         inst.move_to(pos)
 
 func clear_all_card():
