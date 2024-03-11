@@ -20,7 +20,8 @@ func get_img_bytes_by_path(path: String, compression: Image.CompressMode = Image
     print(img)
     if error != OK:
         return get_img_bytes_by_path(SQUARE_PATH)
-    img.compress(compression, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
+    if not img.is_compressed():
+        img.compress(compression, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
     return img.save_png_to_buffer()
 
 func screen_to_world(pos: Vector2, camera: Camera2D) -> Vector2:

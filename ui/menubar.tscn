@@ -11,6 +11,11 @@ grow_vertical = 2
 script = ExtResource("1_3xtje")
 
 [node name="Options" type="PopupMenu" parent="."]
-item_count = 1
+item_count = 3
 item_0/text = "Deck Builder"
 item_0/id = 0
+item_1/text = ""
+item_1/id = 2
+item_1/separator = true
+item_2/text = "Login Screen"
+item_2/id = 1

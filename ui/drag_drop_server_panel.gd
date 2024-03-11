@@ -16,6 +16,8 @@ func _ready():
         func(id: int):
             if id == 0:
                 deckbuilder.show()
+            elif id == 1:
+                lobby_ui.show()
     )    
     
 func add_client_cursor(id: int = 1):
