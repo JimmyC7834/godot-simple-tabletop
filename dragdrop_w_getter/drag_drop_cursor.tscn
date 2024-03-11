@@ -25,7 +25,7 @@ script = ExtResource("1_aqae7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 self_modulate = Color(0.713726, 0.956863, 0.996078, 0.313726)
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_6bw5h")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

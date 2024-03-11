@@ -4,7 +4,7 @@ extends Area2D
 const D_ZOOM: float = 0.02
 const DRAG_THRESHOLD: int = 5
 const CONTEXT_MENU_OFFSET: Vector2 = Vector2(3, 3)
-const DEFAULT_CURSOR_SIZE: Vector2 = Vector2(0.1, 0.1)
+const DEFAULT_CURSOR_SIZE: Vector2 = Vector2(0.15, 0.15)
 
 const CM_FLIP = 0
 const CM_PRIVATE = 1
@@ -245,16 +245,16 @@ func context_menu_flip():
     if selected_any():
         selecting.map(func(c): c.flip())
     
-    selecting = []
-    current_state = state_empty
+    #selecting = []
+    #current_state = state_empty
 
 func context_menu_private():
     card_menu.set_item_checked(CM_PRIVATE, !card_menu.is_item_checked(CM_PRIVATE))
     if selected_any():
         selecting.map(func(c): c.set_private_value(card_menu.is_item_checked(CM_PRIVATE)))
     
-    selecting = []
-    current_state = state_empty
+    #selecting = []
+    #current_state = state_empty
 
 func context_menu_delete():
     if selected_any():
@@ -266,8 +266,8 @@ func context_menu_gather():
     if selected_any():
         selecting.map(func(c): c.move_to(selecting[0].global_position))
     
-    selecting = []
-    current_state = state_empty
+    #selecting = []
+    #current_state = state_empty
 
 func context_menu_shuffle():
     if selected_any():
@@ -306,7 +306,7 @@ func context_menu_spawn_deck():
     if selected_any():
         selecting = []
         current_state = state_empty
-    
+
     var path = Database.choose_path(FileDialog.FILE_MODE_OPEN_FILE)
     if path == null: return    
 
@@ -317,6 +317,8 @@ func context_menu_spawn_deck():
             DragDropServer.new_card_wtex.rpc(
                 res.card_textures[key].save_png_to_buffer(),
                 global_position, res.cards_dict[key])
+
+    Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 ########################  HELPER FUNC  ############################
 

@@ -1,0 +1,34 @@
+{
+	"disabled_build_options": {
+		"disable_3d": true,
+		"disable_3d_physics": true,
+		"disable_navigation": true,
+		"openxr": false
+	},
+	"disabled_classes": [
+		"Mesh",
+		"MeshLibrary",
+		"MultiMesh",
+		"NavigationAgent2D",
+		"NavigationAgent3D",
+		"NavigationMesh",
+		"NavigationMeshSourceGeometryData2D",
+		"NavigationMeshSourceGeometryData3D",
+		"NavigationPolygon",
+		"Node3D",
+		"Occluder3D",
+		"OpenXRAction",
+		"OpenXRActionMap",
+		"OpenXRActionSet",
+		"OpenXRIPBinding",
+		"OpenXRInteractionProfile",
+		"Shape3D",
+		"SkeletonIK3D",
+		"SkeletonModification2D",
+		"SkeletonModificationStack2D",
+		"SkeletonProfile",
+		"Sky",
+		"Texture3D"
+	],
+	"type": "build_profile"
+}
