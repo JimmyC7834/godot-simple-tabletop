@@ -87,8 +87,7 @@ func generate_deck() -> DeckRes:
     var res = DeckRes.new()
     res.cards_dict = deck
     for key in deck:
-        var img = Image.load_from_file(key)
-        #var com = Image.COMPRESS_ASTC if compression_dropdown.selected == 0 else Image.COMPRESS_BPTC
-        img.compress(Image.COMPRESS_ASTC, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
-        res.card_textures[key] = img
+        var img = FileAccess.open(key, FileAccess.READ)
+        var bytes = img.get_buffer(img.get_length())
+        res.card_textures[key] = Marshalls.raw_to_base64(bytes)
     return res

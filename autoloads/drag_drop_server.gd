@@ -25,6 +25,21 @@ func _new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
     return null
 
 @rpc("any_peer", "call_local", "reliable")
+func new_card_wbase64(base64_str: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
+    var img = Image.new()
+    img.load_png_from_buffer(Marshalls.base64_to_raw(base64_str))
+    var texture = ImageTexture.create_from_image(img)
+    if texture is Texture2D:
+        var arr: Array[PlayCard] = []
+        for i in range(count):
+            print(get_multiplayer_authority(), " added card_wtex: ", texture)
+            var inst = card_from_texture(texture)
+            inst.move_to(pos)
+            arr.append(inst)
+        return arr
+
+# old rpc for trasnferring cards texture with array of bytes
+@rpc("any_peer", "call_local", "reliable")
 func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
     var img = Image.new()
     img.load_png_from_buffer(color_arr)

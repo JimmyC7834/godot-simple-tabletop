@@ -320,9 +320,8 @@ func context_menu_spawn_deck():
     var res = Database.load_file(path)
     if res is DeckRes:
         for key in res.cards_dict:
-            res.card_textures[key].decompress()
-            DragDropServer.new_card_wtex.rpc(
-                res.card_textures[key].save_png_to_buffer(),
+            DragDropServer.new_card_wbase64.rpc(
+                res.card_textures[key],
                 global_position, res.cards_dict[key])
 
     Input.set_default_cursor_shape(Input.CURSOR_ARROW)
