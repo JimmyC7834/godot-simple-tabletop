@@ -2,11 +2,14 @@
 
 [ext_resource type="Script" path="res://ui/card_preview.gd" id="1_jkowk"]
 
-[node name="CardPreview" type="Window"]
+[node name="CardPreview" type="Window" node_paths=PackedStringArray("texture_rect", "checkbox")]
+handle_input_locally = false
 title = "Card Preview"
 position = Vector2i(100, 100)
 size = Vector2i(300, 420)
 script = ExtResource("1_jkowk")
+texture_rect = NodePath("TextureRect")
+checkbox = NodePath("CheckBox")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 anchors_preset = 15
@@ -16,3 +19,8 @@ grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="CheckBox" type="CheckBox" parent="."]
+offset_right = 24.0
+offset_bottom = 24.0
+button_pressed = true
