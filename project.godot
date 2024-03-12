@@ -30,6 +30,7 @@ window/vsync/vsync_mode=0
 [gui]
 
 theme/custom="res://default.tres"
+theme/custom_font="res://NunitoSans_10pt-Bold.ttf"
 
 [input]
 
