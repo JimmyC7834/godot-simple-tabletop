@@ -77,6 +77,9 @@ func new_object_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO):
         add_child(inst)
         inst.move_to(pos)
 
+func register_cursor(c: DragDropCursor):
+    cursor = c
+
 func clear_all_card():
     for c in get_children():
         c.queue_free()

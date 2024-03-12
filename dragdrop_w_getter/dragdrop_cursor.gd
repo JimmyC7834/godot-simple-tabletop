@@ -74,6 +74,9 @@ func _ready():
     
     card_menu.id_pressed.connect(handle_card_menu)
     panel_menu.id_pressed.connect(handle_panel_menu)
+    
+    if multiplayer.get_unique_id() == name.to_int():
+        DragDropServer.register_cursor(self)
 
 func _input(event):
     if not is_multiplayer_authority():

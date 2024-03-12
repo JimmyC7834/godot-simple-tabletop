@@ -28,8 +28,6 @@ func add_client_cursor(id: int = 1):
     print("client added: ", str(id))
     var inst = DRAG_DROP_CURSOR.instantiate()
     inst.name = str(id)
-    if DragDropServer.cursor == null:
-        DragDropServer.cursor = inst
     add_child(inst)
     lobby_ui.hide()
     menubar.show()
