@@ -46,7 +46,6 @@ visible = false
 visible = false
 
 [node name="CardPreview" parent="CanvasLayer" instance=ExtResource("6_5l2a4")]
-visible = false
 
 [node name="LobbyUI" parent="CanvasLayer" instance=ExtResource("1_v1mw5")]
 

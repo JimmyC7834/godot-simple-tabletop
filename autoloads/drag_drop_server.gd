@@ -5,6 +5,7 @@ const PLAY_CARD = preload("res://panel item/play_card.tscn")
 const DEFAULT_OBJECT_WIDTH = 200
 
 var camera: Camera2D
+var cursor: DragDropCursor
 var cards: Array[DragDropObject]
 
 func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):

@@ -53,6 +53,9 @@ var panel_menu_func_table = {
 # state machine
 var current_state: Callable
 
+signal on_input(event)
+signal on_hover(obj: DragDropObject)
+
 func _enter_tree():
     set_multiplayer_authority(name.to_int())
 
@@ -76,7 +79,13 @@ func _input(event):
     if not is_multiplayer_authority():
         return
         
+    var prev_hovering = hovering
     hovering = choose_dragdrop_object()
+    
+    # if hovering new card, emit
+    if prev_hovering != hovering and hovering != null:
+        on_hover.emit(hovering)
+
     current_state.call(event)
 
     if not Input.is_action_pressed("LMB"):
@@ -100,6 +109,8 @@ func _input(event):
             DragDropServer.camera.zoom_view(D_ZOOM)
         elif Input.is_action_just_pressed("SCROLL_DOWN"):
             DragDropServer.camera.zoom_view(-D_ZOOM)
+        
+    on_input.emit(event)
 
 ############################# STATE MACHINE ##############################
 

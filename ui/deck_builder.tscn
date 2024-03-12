@@ -3,7 +3,8 @@
 [ext_resource type="Script" path="res://ui/deck_builder.gd" id="1_x22r2"]
 [ext_resource type="PackedScene" uid="uid://s3lbv2yysqr1" path="res://ui/card_selection_screen.tscn" id="2_udvbr"]
 
-[node name="Control" type="Window" node_paths=PackedStringArray("card_selection", "deck_display", "save_btn", "load_btn", "label", "compression_dropdown")]
+[node name="DeckBuilder" type="Window" node_paths=PackedStringArray("card_selection", "deck_display", "save_btn", "load_btn", "label", "compression_dropdown")]
+title = "Deck Builder"
 position = Vector2i(100, 100)
 size = Vector2i(800, 600)
 min_size = Vector2i(800, 600)
