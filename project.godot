@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="simple-tabletop"
+config/version="0.1.1b"
 run/main_scene="res://ui/drag_drop_server_panel.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
@@ -25,6 +26,10 @@ Hud="*res://ui/hud.gd"
 [display]
 
 window/vsync/vsync_mode=0
+
+[gui]
+
+theme/custom="res://default.tres"
 
 [input]
 

@@ -5,7 +5,7 @@
 
 [node name="DeckBuilder" type="Window" node_paths=PackedStringArray("card_selection", "deck_display", "save_btn", "load_btn", "label", "compression_dropdown")]
 title = "Deck Builder"
-position = Vector2i(100, 100)
+position = Vector2i(100, 24)
 size = Vector2i(800, 600)
 min_size = Vector2i(800, 600)
 script = ExtResource("1_x22r2")

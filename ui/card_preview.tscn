@@ -5,8 +5,9 @@
 [node name="CardPreview" type="Window" node_paths=PackedStringArray("texture_rect", "checkbox")]
 handle_input_locally = false
 title = "Card Preview"
-position = Vector2i(100, 100)
+position = Vector2i(100, 87)
 size = Vector2i(300, 420)
+unfocusable = true
 script = ExtResource("1_jkowk")
 texture_rect = NodePath("TextureRect")
 checkbox = NodePath("CheckBox")
@@ -21,6 +22,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="CheckBox" type="CheckBox" parent="."]
+visible = false
 offset_right = 24.0
 offset_bottom = 24.0
 button_pressed = true
