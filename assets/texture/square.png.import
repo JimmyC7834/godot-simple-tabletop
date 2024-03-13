@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm0rk3gx5bcw1"
-path="res://.godot/imported/Weiß_Schwarz_cardback.png-4319c8778bc3cd46e2751223b4cb3ca5.ctex"
+uid="uid://l4hgcjtnu452"
+path="res://.godot/imported/square.png-44837e683502ddb70d8468ee24af51d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Weiß_Schwarz_cardback.png"
-dest_files=["res://.godot/imported/Weiß_Schwarz_cardback.png-4319c8778bc3cd46e2751223b4cb3ca5.ctex"]
+source_file="res://assets/texture/square.png"
+dest_files=["res://.godot/imported/square.png-44837e683502ddb70d8468ee24af51d4.ctex"]
 
 [params]
 

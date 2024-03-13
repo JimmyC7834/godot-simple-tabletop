@@ -68,7 +68,7 @@ func _ready():
         0.4 + randf_range(0, 0.6), 
         0.4 + randf_range(0, 0.6),
         0.4 + randf_range(0, 0.6), 
-        0.3)
+        0.4)
     
     current_state = state_empty
     

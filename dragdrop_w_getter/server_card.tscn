@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://1s5ps3rpnbjq"]
 
 [ext_resource type="Script" path="res://panel item/play_card.gd" id="1_6njjx"]
-[ext_resource type="Texture2D" uid="uid://cm0rk3gx5bcw1" path="res://assets/Weiß_Schwarz_cardback.png" id="2_v2blg"]
+[ext_resource type="Texture2D" uid="uid://cm0rk3gx5bcw1" path="res://assets/texture/Weiß_Schwarz_cardback.png" id="2_v2blg"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hfgyi"]
 properties/0/path = NodePath(".:position")

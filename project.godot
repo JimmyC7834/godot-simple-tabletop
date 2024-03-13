@@ -14,7 +14,7 @@ config/name="simple-tabletop"
 config/version="0.1.1b"
 run/main_scene="res://ui/drag_drop_server_panel.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/texture/icon.svg"
 
 [autoload]
 
@@ -29,8 +29,8 @@ window/vsync/vsync_mode=0
 
 [gui]
 
-theme/custom="res://default.tres"
-theme/custom_font="res://NunitoSans_10pt-Bold.ttf"
+theme/custom="res://ui/default.tres"
+theme/custom_font="res://assets/fonts/NunitoSans_10pt-Bold.ttf"
 
 [input]
 

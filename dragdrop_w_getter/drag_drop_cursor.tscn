@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dea0ynlmnxn45"]
 
 [ext_resource type="Script" path="res://dragdrop_w_getter/dragdrop_cursor.gd" id="1_aqae7"]
-[ext_resource type="Texture2D" uid="uid://l4hgcjtnu452" path="res://assets/square.png" id="2_6bw5h"]
+[ext_resource type="Texture2D" uid="uid://l4hgcjtnu452" path="res://assets/texture/square.png" id="2_6bw5h"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mcwr0"]
 properties/0/path = NodePath(".:position")

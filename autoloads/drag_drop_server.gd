@@ -9,7 +9,7 @@ var cursor: DragDropCursor
 var cards: Array[DragDropObject]
 
 func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
-    new_card_wtex.rpc(Utils.get_img_bytes_by_path(path), pos, count)
+    new_card_wtex(Utils.get_img_bytes_by_path(path), pos, count)
 
 # old new_card, read from path instead of sending texture
 @rpc("any_peer", "call_local", "reliable")
@@ -63,7 +63,7 @@ func card_from_texture(texture: Texture2D) -> PlayCard:
     return inst
 
 func new_object(path: String, pos: Vector2 = Vector2.ZERO):
-    new_object_wtex.rpc(Utils.get_img_bytes_by_path(path), pos)
+    new_object_wtex(Utils.get_img_bytes_by_path(path), pos)
 
 @rpc("any_peer", "call_local", "reliable")
 func new_object_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO):

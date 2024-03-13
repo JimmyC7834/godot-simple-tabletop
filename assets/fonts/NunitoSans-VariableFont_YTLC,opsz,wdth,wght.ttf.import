@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dm8v1y3c1qejx"
-path="res://.godot/imported/NunitoSans_10pt-Bold.ttf-0e0b6d70eb3e67d126ac1447e88498d2.fontdata"
+uid="uid://bmpwqxa3mpkwi"
+path="res://.godot/imported/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf-e2034caa2c350e668a21af840c5095d7.fontdata"
 
 [deps]
 
-source_file="res://NunitoSans_10pt-Bold.ttf"
-dest_files=["res://.godot/imported/NunitoSans_10pt-Bold.ttf-0e0b6d70eb3e67d126ac1447e88498d2.fontdata"]
+source_file="res://assets/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf"
+dest_files=["res://.godot/imported/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf-e2034caa2c350e668a21af840c5095d7.fontdata"]
 
 [params]
 

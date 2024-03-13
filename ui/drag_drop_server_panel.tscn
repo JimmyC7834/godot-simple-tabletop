@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/drag_drop_server_panel.gd" id="1_udycr"]
 [ext_resource type="PackedScene" uid="uid://cf2e86lw05mot" path="res://ui/lobby_ui.tscn" id="1_v1mw5"]
-[ext_resource type="Texture2D" uid="uid://cs7fusy316jwn" path="res://assets/texture_09.png" id="2_a5gaw"]
+[ext_resource type="Texture2D" uid="uid://cs7fusy316jwn" path="res://assets/texture/texture_09.png" id="2_a5gaw"]
 [ext_resource type="PackedScene" uid="uid://dcuvux3l2ft65" path="res://ui/menubar.tscn" id="5_jrdmh"]
 [ext_resource type="PackedScene" uid="uid://e3wmm6gsk785" path="res://ui/deck_builder.tscn" id="5_x7ly4"]
 [ext_resource type="PackedScene" uid="uid://bs4ty7l1qiayq" path="res://ui/card_preview.tscn" id="6_5l2a4"]
@@ -24,7 +24,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 102400, 102400)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
+_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn", "res://panel item/panel_object.tscn", "res://panel item/play_card.tscn")
 spawn_path = NodePath("..")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("label")]
