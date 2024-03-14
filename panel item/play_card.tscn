@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dy1eap07t04ma"]
+[gd_scene load_steps=3 format=3 uid="uid://dy1eap07t04ma"]
 
 [ext_resource type="Script" path="res://panel item/play_card.gd" id="1_2e3a4"]
-[ext_resource type="Texture2D" uid="uid://cm0rk3gx5bcw1" path="res://assets/texture/Weiß_Schwarz_cardback.png" id="2_dd1bi"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hfgyi"]
 properties/0/path = NodePath(".:position")
@@ -17,7 +16,6 @@ properties/2/replication_mode = 0
 [node name="Card" type="Area2D"]
 script = ExtResource("1_2e3a4")
 private_tint = Color(0.913725, 0.694118, 0.937255, 1)
-back_texture = ExtResource("2_dd1bi")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_hfgyi")

@@ -1,5 +1,5 @@
 class_name PlayCard
-extends ServerCard
+extends RPCDragDrop
 
 const SQUARE = preload("res://assets/texture/square.png")
 

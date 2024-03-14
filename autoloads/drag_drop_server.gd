@@ -46,6 +46,7 @@ func new_card_wbase64(base64_str: String, card_back_base64: String = "", pos: Ve
             print(get_multiplayer_authority(), " added card_wtex: ", texture)
             var inst = card_from_texture(texture)
             inst.back_texture = back_texture
+            add_child(inst)
             inst.move_to(pos)
             arr.append(inst)
         return arr
@@ -69,8 +70,7 @@ func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO, coun
 
 func card_from_texture(texture: Texture2D) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
-    inst.texture = texture
-    add_child(inst)
+    inst.front_texture = texture
     return inst
 
 func new_object(path: String, pos: Vector2 = Vector2.ZERO):
