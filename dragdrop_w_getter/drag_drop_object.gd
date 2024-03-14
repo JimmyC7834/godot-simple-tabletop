@@ -2,7 +2,7 @@ class_name DragDropObject
 extends Area2D
 
 const OUTLINE_WIDTH: float = 8
-const MAT_OUTLINE = preload("res://outline.tres")
+const MAT_OUTLINE = preload("res://assets/shader/outline.tres")
 
 @export var texture: Texture2D
 

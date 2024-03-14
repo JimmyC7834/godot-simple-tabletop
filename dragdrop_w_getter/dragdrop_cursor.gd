@@ -335,7 +335,7 @@ func context_menu_spawn_deck():
     if res is DeckRes:
         for key in res.cards_dict:
             DragDropServer.new_card_wbase64.rpc(
-                res.card_textures[key],
+                res.card_textures[key], res.back_texture_base64,
                 global_position, res.cards_dict[key])
 
     Input.set_default_cursor_shape(Input.CURSOR_ARROW)

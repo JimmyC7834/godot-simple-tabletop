@@ -1,7 +1,7 @@
 class_name PlayCard
 extends ServerCard
 
-const SQUARE = preload("res://assets/square.png")
+const SQUARE = preload("res://assets/texture/square.png")
 
 @export var private_tint: Color
 
