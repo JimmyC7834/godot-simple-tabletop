@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d3t12t6ma160i"]
 
-[ext_resource type="Script" path="res://dragdrop_w_getter/drag_drop_object.gd" id="1_0qbeh"]
+[ext_resource type="Script" path="res://panel item/rpc_dargdrop.gd" id="1_1qpo7"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hfgyi"]
 properties/0/path = NodePath(".:position")
@@ -14,7 +14,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 0
 
 [node name="PanelObject" type="Area2D"]
-script = ExtResource("1_0qbeh")
+script = ExtResource("1_1qpo7")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_hfgyi")

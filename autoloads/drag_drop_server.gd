@@ -9,35 +9,25 @@ var camera: Camera2D
 var cursor: DragDropCursor
 var cards: Array[DragDropObject]
 
+var tex_square_base64: String
+
+func _ready():
+    tex_square_base64 = Utils.read_file_as_base64("res://assets/texture/square.png")
+
 func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
-    new_card_wtex(Utils.get_img_bytes_by_path(path), pos, count)
-
-# old new_card, read from path instead of sending texture
-@rpc("any_peer", "call_local", "reliable")
-func _new_card(path: String, pos: Vector2 = Vector2.ZERO) -> PlayCard:
-    var inst = PLAY_CARD.instantiate()
-    var texture: Texture2D = Utils.get_texture_by_path(path)
-    if texture is Texture2D:
-        print(get_multiplayer_authority(), " added card: ", path)
-        inst.texture = texture
-        add_child(inst)
-        inst.move_to(pos)
-        return inst
-
-    return null
+    new_card_wbase64.rpc(Utils.read_file_as_base64(path), pos, count)
 
 @rpc("any_peer", "call_local", "reliable")
-func new_card_wbase64(base64_str: String, card_back_base64: String = "", pos: Vector2 = Vector2.ZERO, count: int = 1):
+func new_card_wbase64(base64_str: String, card_back_base64: String = tex_square_base64, 
+                        pos: Vector2 = Vector2.ZERO, count: int = 1):
     var img = Image.new()
     img.load_png_from_buffer(Marshalls.base64_to_raw(base64_str))
     var texture = ImageTexture.create_from_image(img)
     
     img = Image.new()
     if card_back_base64 == "":
-        img.load_png_from_buffer(
-            Marshalls.base64_to_raw(Utils.read_file_as_base64("res://assets/texture/square.png")))
-    else:
-        img.load_png_from_buffer(Marshalls.base64_to_raw(card_back_base64))
+        card_back_base64 = tex_square_base64
+    img.load_png_from_buffer(Marshalls.base64_to_raw(card_back_base64))
     var back_texture = ImageTexture.create_from_image(img)
    
     if texture is Texture2D:
@@ -51,42 +41,34 @@ func new_card_wbase64(base64_str: String, card_back_base64: String = "", pos: Ve
             arr.append(inst)
         return arr
 
-# old rpc for trasnferring cards texture with array of bytes
-@rpc("any_peer", "call_local", "reliable")
-func new_card_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
-    var img = Image.new()
-    img.load_png_from_buffer(color_arr)
-    var texture = ImageTexture.create_from_image(img)
-    if texture is Texture2D:
-        var arr: Array[PlayCard] = []
-        for i in range(count):
-            print(get_multiplayer_authority(), " added card_wtex: ", texture)
-            var inst = card_from_texture(texture)
-            inst.move_to(pos)
-            arr.append(inst)
-        return arr
-
-    return null
-
 func card_from_texture(texture: Texture2D) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
     inst.front_texture = texture
     return inst
 
 func new_object(path: String, pos: Vector2 = Vector2.ZERO):
-    new_object_wtex(Utils.get_img_bytes_by_path(path), pos)
+    new_object_wtex.rpc(Utils.read_file_as_base64(path), tex_square_base64, pos)
 
 @rpc("any_peer", "call_local", "reliable")
-func new_object_wtex(color_arr: PackedByteArray, pos: Vector2 = Vector2.ZERO):
+func new_object_wtex(base64_str: String, card_back_base64: String = tex_square_base64, 
+                        pos: Vector2 = Vector2.ZERO):
     var img = Image.new()
-    img.load_png_from_buffer(color_arr)
+    img.load_png_from_buffer(Marshalls.base64_to_raw(base64_str))
     var texture = ImageTexture.create_from_image(img)
+    
+    img = Image.new()
+    if card_back_base64 == "":
+        card_back_base64 = tex_square_base64
+    img.load_png_from_buffer(Marshalls.base64_to_raw(card_back_base64))
+    var back_texture = ImageTexture.create_from_image(img)
+   
     if texture is Texture2D:
-        print(get_multiplayer_authority(), " added card_wtex: ", texture)
-        var inst = PANEL_OBJECT.instantiate()
-        inst.texture = texture
+        print(get_multiplayer_authority(), " added object: ", texture)
+        var inst = card_from_texture(texture)
+        inst.back_texture = back_texture
         add_child(inst)
         inst.move_to(pos)
+        return inst
 
 func register_cursor(c: DragDropCursor):
     cursor = c
