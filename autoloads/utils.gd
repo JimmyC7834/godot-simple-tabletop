@@ -25,10 +25,15 @@ func get_img_bytes_by_path(path: String, compression: Image.CompressMode = Image
         img.compress(compression, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_8x8)
     return img.save_png_to_buffer()
 
-func read_file_as_base64(path: String):
+func read_file_as_base64(path: String) -> String:
     var file = FileAccess.open(path, FileAccess.READ)
     var bytes = file.get_buffer(file.get_length())
     return Marshalls.raw_to_base64(bytes)
+
+func read_file_as_bytes(path: String) -> PackedByteArray:
+    var file = FileAccess.open(path, FileAccess.READ)
+    var bytes = file.get_buffer(file.get_length())
+    return bytes
 
 func screen_to_world(pos: Vector2, camera: Camera2D) -> Vector2:
     var v = camera.get_viewport().get_canvas_transform().affine_inverse()

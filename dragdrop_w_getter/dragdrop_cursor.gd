@@ -334,9 +334,12 @@ func context_menu_spawn_deck():
     var res = Database.load_file(path)
     if res is DeckRes:
         for key in res.cards_dict:
+            var bytes: PackedByteArray = Marshalls.base64_to_raw(res.card_textures[key])
+            var file_name: String = Database.file_name_from_path(key)
+            Database.add_data(file_name, bytes)
+
             DragDropServer.new_card_wbase64.rpc(
-                res.card_textures[key], res.back_texture_base64,
-                global_position, res.cards_dict[key])
+                bytes, global_position, res.cards_dict[key])
 
     Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 

@@ -18,16 +18,26 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
     new_card_wbase64.rpc(Utils.read_file_as_base64(path), pos, count)
 
 @rpc("any_peer", "call_local", "reliable")
-func new_card_wbase64(base64_str: String, card_back_base64: String = tex_square_base64, 
-                        pos: Vector2 = Vector2.ZERO, count: int = 1):
+func prepare_new_object(file_name: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
+    if !Database.data.has(file_name):
+        Database.request_file_from_peer.rpc_id(multiplayer.get_remote_sender_id(), file_name)
+        var path = ""
+        while path != file_name:
+            path = await Database.on_data_added
+
+    new_card_wbase64(Database.data[file_name], pos, count)
+
+@rpc("any_peer", "call_local", "reliable")
+func new_card_wbase64(data_bytes: PackedByteArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
     var img = Image.new()
-    img.load_png_from_buffer(Marshalls.base64_to_raw(base64_str))
+    img.load_png_from_buffer(data_bytes)
     var texture = ImageTexture.create_from_image(img)
-    
-    img = Image.new()
-    if card_back_base64 == "":
-        card_back_base64 = tex_square_base64
-    img.load_png_from_buffer(Marshalls.base64_to_raw(card_back_base64))
+
+    #img = Image.new()
+    #if base64_str.size() < 2 or base64_str[1].length() == 0:
+        #img.load_png_from_buffer(Marshalls.base64_to_raw(tex_square_base64))
+    #else:
+        #img.load_png_from_buffer(Marshalls.base64_to_raw(base64_str[1]))
     var back_texture = ImageTexture.create_from_image(img)
    
     if texture is Texture2D:

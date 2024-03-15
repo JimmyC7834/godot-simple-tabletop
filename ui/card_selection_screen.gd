@@ -33,20 +33,6 @@ func _ready():
         update_cards_display()
         )
 
-#func hovering_card(path: String):
-    #hovering = true
-    #print("focusing")
-    #await Utils.delay(FOCUS_HOVER_SPAN)
-    #if hovering:
-        #print("focused ", path)
-        #card_display.visible = true
-        #card_display.texture = Utils.get_texture_by_path(path)
-
-func cancel_card_focus():
-    print("cancel focus ")
-    hovering = false
-    card_display.visible = false 
-
 func update_cards_display():
     var uni: Array = []
     for a in card_paths:

@@ -18,9 +18,9 @@ config/icon="res://assets/texture/icon.svg"
 
 [autoload]
 
-DragDropServer="*res://autoloads/drag_drop_server.gd"
-Database="*res://autoloads/database.gd"
 Utils="*res://autoloads/utils.gd"
+Database="*res://autoloads/database.gd"
+DragDropServer="*res://autoloads/drag_drop_server.gd"
 Hud="*res://ui/hud.gd"
 
 [display]
