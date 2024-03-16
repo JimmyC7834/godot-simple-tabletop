@@ -14,7 +14,7 @@ var card_back_path: String = ""
 signal on_deck_changed
 
 func _ready():
-    deck_display.icon_mode = ItemList.ICON_MODE_TOP    
+    deck_display.icon_mode = ItemList.ICON_MODE_TOP
     
     save_btn.pressed.connect(save_deck)
     load_btn.pressed.connect(load_deck)

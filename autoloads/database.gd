@@ -155,6 +155,12 @@ func task_file_sending(peer: int, file_name: String, bytes: PackedByteArray):
 # should be called after checking the server has the corresponding files
 func task_new_object(front: String, back: String, pos: Vector2, count: int = 1):
     DragDropServer.new_object.rpc(PackedStringArray([front, back]), pos, count)
+    DragDropServer.new_object(PackedStringArray([front, back]), pos, count)
+    pop_task()
+
+# should be called after checking the server has the corresponding files
+func task_new_object_for_peer(peer: int, front: String, back: String, pos: Vector2, count: int = 1):
+    DragDropServer.new_object.rpc_id(peer, PackedStringArray([front, back]), pos, count)
     pop_task()
 
 ######################## RPC ################################

@@ -310,7 +310,12 @@ func context_menu_spawn_card():
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
     
-    DragDropServer.new_card(path, global_position)
+    var file_name = Database.file_name_from_path(path)
+    var bytes = Utils.read_file_as_bytes(path)
+    Database.queue_tasks([
+            Database.task_file_sharing.bind(file_name, bytes),
+            Database.task_new_object.bind(file_name, "", global_position),
+        ])
 
 func context_menu_spawn_object():
     if selected_any():
@@ -321,7 +326,12 @@ func context_menu_spawn_object():
         FileDialog.FILE_MODE_OPEN_FILE, ["*.png", "*.jpg", "*.jpeg"])
     if path == null: return    
 
-    DragDropServer.new_object(path, global_position)
+    var file_name = Database.file_name_from_path(path)
+    var bytes = Utils.read_file_as_bytes(path)
+    Database.queue_tasks([
+            Database.task_file_sharing.bind(file_name, bytes),
+            Database.task_new_object.bind(file_name, "", global_position),
+        ])
 
 func context_menu_spawn_deck():
     if selected_any():

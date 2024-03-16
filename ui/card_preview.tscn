@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://ui/card_preview.gd" id="1_jkowk"]
 
 [node name="CardPreview" type="Window" node_paths=PackedStringArray("texture_rect", "checkbox")]
+transparent_bg = true
 handle_input_locally = false
 title = "Card Preview"
 position = Vector2i(100, 87)

@@ -24,7 +24,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 102400, 102400)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn", "res://panel item/panel_object.tscn", "res://panel item/play_card.tscn")
+_spawnable_scenes = PackedStringArray("res://dragdrop_w_getter/drag_drop_cursor.tscn")
 spawn_path = NodePath("..")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("label")]
