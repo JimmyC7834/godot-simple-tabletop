@@ -336,7 +336,7 @@ func context_menu_spawn_deck():
         var back_bytes: PackedByteArray = Marshalls.base64_to_raw(res.back_texture_base64)
         var back_file_name: String = Database.file_name_from_path(res.back_texture_path)
         Database.queue_task(
-                Database.task_file_sending.bind(1, back_file_name, back_bytes))
+                Database.task_file_sharing.bind(back_file_name, back_bytes))
 
         for key in res.cards_dict:
             var bytes: PackedByteArray = Marshalls.base64_to_raw(res.card_textures[key])
@@ -344,7 +344,7 @@ func context_menu_spawn_deck():
             Database.add_data(file_name, bytes)
 
             Database.queue_tasks([
-                Database.task_file_sending.bind(1, file_name, bytes),
+                Database.task_file_sharing.bind(file_name, bytes),
                 Database.task_new_object.bind(file_name, back_file_name, global_position, res.cards_dict[key]),
             ])
 

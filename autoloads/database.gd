@@ -93,20 +93,36 @@ func queue_task(task: Callable):
     queue_tasks([task])
 
 func queue_tasks(tasks):
+    insert_tasks(tasks, network_queue.size())
+
+func insert_task(task, index: int):
+    insert_tasks([task], index)
+
+func insert_tasks(tasks, index: int):
     if tasks.is_empty(): return
-    
+
     var was_empty: bool = network_queue.is_empty()
-    network_queue.append_array(tasks)
-    print(multiplayer.get_unique_id(), " queued task ", tasks)
+    tasks.reverse()
+    for t in tasks:
+        network_queue.insert(index, t)
+
+    print(multiplayer.get_unique_id(), " inserted tasks ", tasks, " at ", str(index))
     if was_empty:
         print(multiplayer.get_unique_id(), " initiated network queue")
         network_queue[0].call()
 
 func pop_task():
+    print("pop task ", network_queue[0])    
     network_queue.pop_front()
     if !network_queue.is_empty():
-        print("execute next task")
+        print("execute next task ", network_queue[0])
         network_queue[0].call()
+
+func task_file_sharing(file_name: String, bytes: PackedByteArray):
+    for p in multiplayer.get_peers():
+        insert_task(task_file_sending.bind(p, file_name, bytes), 1)
+    insert_task(task_file_sending.bind(multiplayer.get_unique_id(), file_name, bytes), 1)
+    pop_task()
 
 # send the file to peer if the peer does not have the file
 func task_file_sending(peer: int, file_name: String, bytes: PackedByteArray):
@@ -114,6 +130,7 @@ func task_file_sending(peer: int, file_name: String, bytes: PackedByteArray):
         add_data(file_name, bytes)
     
     if peer == multiplayer.get_unique_id():
+        print("self has file ", file_name)
         pop_task()
         return
 
