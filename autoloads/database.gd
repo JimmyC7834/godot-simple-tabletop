@@ -14,6 +14,9 @@ var paths
 
 signal file_dialog_end(path)
 
+signal on_task_added(task)
+signal on_task_popped(task)
+
 # emitted when a new file is received via rpc
 signal on_data_added(file_name: String)
 
@@ -105,6 +108,7 @@ func insert_tasks(tasks, index: int):
     tasks.reverse()
     for t in tasks:
         network_queue.insert(index, t)
+        on_task_added.emit(t)
 
     print(multiplayer.get_unique_id(), " inserted tasks ", tasks, " at ", str(index))
     if was_empty:
@@ -113,7 +117,9 @@ func insert_tasks(tasks, index: int):
 
 func pop_task():
     print("pop task ", network_queue[0])    
-    network_queue.pop_front()
+    var popped = network_queue.pop_front()
+    on_task_popped.emit(popped)
+    
     if !network_queue.is_empty():
         print("execute next task ", network_queue[0])
         network_queue[0].call()

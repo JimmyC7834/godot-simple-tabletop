@@ -1,8 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7mgixh7vl5uw"]
+[gd_scene load_steps=3 format=3 uid="uid://c7mgixh7vl5uw"]
 
 [ext_resource type="PackedScene" uid="uid://0is158vlvnit" path="res://ui/control_bar.tscn" id="1_kkmw2"]
+[ext_resource type="PackedScene" uid="uid://u683huoc3h3k" path="res://ui/networking_progressbar.tscn" id="2_uac2b"]
 
 [node name="Hud" type="CanvasLayer"]
 
 [node name="ControlBar" parent="." instance=ExtResource("1_kkmw2")]
+visible = false
+
+[node name="NetworkingProgressBar" parent="." instance=ExtResource("2_uac2b")]
 visible = false
