@@ -5,13 +5,23 @@ const CARDS_PATH = "%s/cards/" % SAVE_PATH_ROOT
 const DECKS_PATH = "%s/decks/" % SAVE_PATH_ROOT
 const TEXTURE_PATH = "%s/textures/" % SAVE_PATH_ROOT
 
+var network_queue = []
+
 var data = {}
 
 var file_dialog: FileDialog
 var paths
 
 signal file_dialog_end(path)
+
+# emitted when a new file is received via rpc
 signal on_data_added(file_name: String)
+
+# emitted when a new file is confirmed to be received via rpc
+signal on_data_added_confirmed(file_name: String)
+
+# emitted when a new file is confirmed to be received via rpc
+signal on_data_exist_checked(xs)
 
 func _ready():
     DirAccess.make_dir_absolute(SAVE_PATH_ROOT)
@@ -30,6 +40,17 @@ func _ready():
     file_dialog.dir_selected.connect(func(path): print(path))
     file_dialog.canceled.connect(func(): file_dialog_end.emit(null))
     file_dialog.confirmed.connect(func(): file_dialog_end.emit(null))
+    
+    on_data_added.connect(func(file_name: String): 
+        print(multiplayer.get_unique_id(), " got file: ", file_name))
+    
+    on_data_added_confirmed.connect(func(file_name: String): 
+        print(multiplayer.get_unique_id(), " confirmed ", 
+        multiplayer.get_remote_sender_id(), " got file: ", file_name))
+    
+    on_data_exist_checked.connect(func(xs):
+        print(multiplayer.get_unique_id(), " checked ", 
+        multiplayer.get_remote_sender_id(), " has file: ", xs[0], " is ", str(xs[1])))
 
 func choose_path(file_mode: FileDialog.FileMode, filter: Array[String] = ["*.tres"]):
     file_dialog.file_mode = file_mode
@@ -58,21 +79,86 @@ func file_name_from_path(path: String) -> String:
 func add_data(file_name: String, bytes: PackedByteArray):
     data[file_name] = bytes    
 
-func get_data(file_name: String, bytes: PackedByteArray):
+func get_data(file_name: String, callback):
     if !Database.data.has(file_name):
-        Database.request_file_from_peer.rpc_id(multiplayer.get_remote_sender_id(), file_name)
+        Database.request_file_from_sender.rpc_id(multiplayer.get_remote_sender_id(), file_name)
         var path = ""
         while path != file_name:
             path = await Database.on_data_added
+    callback.call(Database.data[file_name])
     return Database.data[file_name]
 
-@rpc("any_peer", "call_local", "reliable")
-func share_file(file_name: String, bytes: PackedByteArray):
+###################### NETWORK QUEUE ########################
+func queue_task(task: Callable):
+    queue_tasks([task])
+
+func queue_tasks(tasks):
+    if tasks.is_empty(): return
+    
+    var was_empty: bool = network_queue.is_empty()
+    network_queue.append_array(tasks)
+    print(multiplayer.get_unique_id(), " queued task ", tasks)
+    if was_empty:
+        print(multiplayer.get_unique_id(), " initiated network queue")
+        network_queue[0].call()
+
+func pop_task():
+    network_queue.pop_front()
+    if !network_queue.is_empty():
+        print("execute next task")
+        network_queue[0].call()
+
+# send the file to peer if the peer does not have the file
+func task_file_sending(peer: int, file_name: String, bytes: PackedByteArray):
     if !data.has(file_name):
         add_data(file_name, bytes)
-        on_data_added.emit(file_name)
+    
+    if peer == multiplayer.get_unique_id():
+        pop_task()
+        return
+
+    print("checking if ", str(peer), " has file ", file_name)
+    check_file.rpc_id(peer, file_name)
+    var xs = await on_data_exist_checked
+    var file_exist: bool = xs[1]
+    if !file_exist:
+        print("sending file ", file_name ," to ", str(peer))
+        send_file.rpc_id(peer, file_name, bytes)
+        await on_data_added_confirmed
+    
+    pop_task()
+
+# tell server to spawn object
+# should be called after checking the server has the corresponding files
+func task_new_object(front: String, back: String, pos: Vector2, count: int = 1):
+    DragDropServer.new_object.rpc(PackedStringArray([front, back]), pos, count)
+    pop_task()
+
+######################## RPC ################################
 
 @rpc("any_peer", "call_remote", "reliable")
-func request_file_from_peer(file_name: String):
+func check_file(file_name: String):
+    return_check_file.rpc_id(
+        multiplayer.get_remote_sender_id(), file_name, data.has(file_name))
+
+@rpc("any_peer", "call_remote", "reliable")
+func return_check_file(file_name: String, exist: bool):
+    on_data_exist_checked.emit([file_name, exist])
+
+@rpc("any_peer", "call_remote", "reliable")
+func confirm_file(file_name: String):
+    on_data_added_confirmed.emit(file_name)
+
+@rpc("any_peer", "call_remote", "reliable")
+func send_file(file_name: String, bytes: PackedByteArray):
+    if !data.has(file_name):
+        print(multiplayer.get_unique_id(), " got file ", file_name)
+        add_data(file_name, bytes)
+        on_data_added.emit(file_name)
+        confirm_file.rpc_id(multiplayer.get_remote_sender_id(), file_name)
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_file_from_sender(file_name: String):
     if data.has(file_name):
-        share_file.rpc_id(multiplayer.get_remote_sender_id(), file_name, data[file_name])         
+        print(multiplayer.get_unique_id(), " got request ", file_name)
+        send_file.rpc_id(multiplayer.get_remote_sender_id(), file_name, data[file_name])         

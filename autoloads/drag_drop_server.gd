@@ -19,13 +19,10 @@ func new_card(path: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
 
 @rpc("any_peer", "call_local", "reliable")
 func prepare_new_object(file_name: String, pos: Vector2 = Vector2.ZERO, count: int = 1):
-    if !Database.data.has(file_name):
-        Database.request_file_from_peer.rpc_id(multiplayer.get_remote_sender_id(), file_name)
-        var path = ""
-        while path != file_name:
-            path = await Database.on_data_added
+    Database.get_data(file_name, func(bytes): 
+        new_card_wbase64(bytes, pos, count))
 
-    new_card_wbase64(Database.data[file_name], pos, count)
+    #new_card_wbase64(Database.data[file_name], pos, count)
 
 @rpc("any_peer", "call_local", "reliable")
 func new_card_wbase64(data_bytes: PackedByteArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
@@ -51,13 +48,37 @@ func new_card_wbase64(data_bytes: PackedByteArray, pos: Vector2 = Vector2.ZERO, 
             arr.append(inst)
         return arr
 
+@rpc("any_peer", "call_local", "reliable")
+func new_object(file_names: PackedStringArray, pos: Vector2 = Vector2.ZERO, count: int = 1):
+    var img = Image.new()
+    img.load_png_from_buffer(Database.data[file_names[0]])
+    var texture = ImageTexture.create_from_image(img)
+
+    img = Image.new()
+    if file_names.size() < 2 or file_names[1].length() == 0:
+        img.load_png_from_buffer(Marshalls.base64_to_raw(tex_square_base64))
+    else:
+        img.load_png_from_buffer(Database.data[file_names[1]])
+    var back_texture = ImageTexture.create_from_image(img)
+   
+    if texture is Texture2D:
+        var arr: Array[PlayCard] = []
+        for i in range(count):
+            print(get_multiplayer_authority(), " added object: ", texture)
+            var inst = card_from_texture(texture)
+            inst.back_texture = back_texture
+            add_child(inst)
+            inst.move_to(pos)
+            arr.append(inst)
+        return arr
+
 func card_from_texture(texture: Texture2D) -> PlayCard:
     var inst = PLAY_CARD.instantiate()
     inst.front_texture = texture
     return inst
 
-func new_object(path: String, pos: Vector2 = Vector2.ZERO):
-    new_object_wtex.rpc(Utils.read_file_as_base64(path), tex_square_base64, pos)
+#func new_object(path: String, pos: Vector2 = Vector2.ZERO):
+    #new_object_wtex.rpc(Utils.read_file_as_base64(path), tex_square_base64, pos)
 
 @rpc("any_peer", "call_local", "reliable")
 func new_object_wtex(base64_str: String, card_back_base64: String = tex_square_base64, 

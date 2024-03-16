@@ -25,13 +25,11 @@ func _ready():
         if paths == null:
             return
         card_paths.append_array(Array(paths))
-        update_cards_display()
-        )
+        update_cards_display())
     
     sort_btn.pressed.connect(func():
         card_paths.sort()
-        update_cards_display()
-        )
+        update_cards_display())
 
 func update_cards_display():
     var uni: Array = []
